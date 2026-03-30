@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Buku</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="book-card">
+
+    <!-- COVER + TOMBOL -->
+    <div class="book-image">
+     <img id="cover" src="" alt="Sampul Buku" style="display:none;">
+        <div id="noCover">📚</div>
+
+        <!-- tombol pindah ke sini -->
+        <div class="book-actions">
+            <a id="btnBaca" target="_blank" class="btn read">📖 Baca</a>
+            <a id="btnUnduh" class="btn download">⬇️ Unduh</a>
+        </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="book-info">
+        <h2 id="judul">Memuat...</h2>
+        <h4 id="penulis"></h4>
+        <p><strong>Penerbit:</strong> <span id="penerbit"></span></p>
+        <p><strong>Kota:</strong> <span id="kota"></span></p>
+        <p><strong>Tahun:</strong> <span id="tahun"></span></p>
+        <p><strong>ISBN:</strong> <span id="isbn"></span></p>
+        <p><strong>Kategori:</strong> <span id="kategori"></span></p>
+
+        <!-- tombol navigasi tetap di sini -->
+        <div class="book-actions">
+            <button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button>
+            <button id="btnNext" class="btn nav">➡️ Buku Lainnya</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+let dataRows = [];
+let currentIndex = 1;
+
+const btnNext = document.getElementById("btnNext");
+const btnPrev = document.getElementById("btnPrev");
+
+fetch('buku.csv')
+  .then(res => res.text())
+  .then(text => {
+    dataRows = text.trim().split("\n");
+
+    if (dataRows.length < 2) {
+        console.error("CSV kosong");
+        return;
+    }
+
+    tampilkanData(currentIndex);
+    updateButtonState();
+  });
+
+function parseCSV(row) {
+    return row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
+        .map(item => item.replace(/^"|"$/g, ''));
+}
+
+function tampilkanData(index) {
+    const cols = parseCSV(dataRows[index]);
+
+    document.getElementById("judul").innerText = cols[0] || "-";
+    document.getElementById("penulis").innerText = cols[1] || "-";
+    document.getElementById("penerbit").innerText = cols[2] || "-";
+    document.getElementById("kota").innerText = cols[3] || "-";
+    document.getElementById("tahun").innerText = cols[4] || "-";
+    document.getElementById("isbn").innerText = cols[5] || "-";
+    document.getElementById("kategori").innerText = cols[8] || "-";
+
+    const cover = document.getElementById("cover");
+    const noCover = document.getElementById("noCover");
+
+        if (!cols[6] || cols[6].trim() === "") {
+            cover.style.display = "none";
+             noCover.style.display = "flex";
+            } else {
+                cover.style.display = "block";
+                noCover.style.display = "none";
+                 cover.src = cols[6];
+                }
+    document.getElementById("btnBaca").href = cols[7] || "#";
+    document.getElementById("btnUnduh").href = cols[7] || "#";
+}
+
+function updateButtonState() {
+    btnPrev.disabled = (currentIndex <= 1);
+    btnNext.disabled = (currentIndex >= dataRows.length - 1);
+}
+
+// NEXT
+btnNext.addEventListener("click", () => {
+    currentIndex++;
+    tampilkanData(currentIndex);
+    updateButtonState();
+});
+
+// PREV
+btnPrev.addEventListener("click", () => {
+    currentIndex--;
+    tampilkanData(currentIndex);
+    updateButtonState();
+});
+
+});
+</script>
+
+</body>
+</html>
+
+
