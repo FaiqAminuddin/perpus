@@ -1,130 +1,317 @@
+/* RESET & GLOBAL */
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f9;
+    background: #f9fafc;
     margin: 0;
     padding: 20px;
-}
-button:disabled {
-    background: #ccc !important;
-    cursor: not-allowed;
-    opacity: 0.7;
+    color: #333;
 }
 
-/* CARD */
+button:disabled,
+.btn.nav:disabled {
+    background: #ddd !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* HEADER (gradient biru tua) */
+header {
+    background: linear-gradient(135deg, #d5ec78, #5baf93);
+    color: #5265f6;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+}
+header h1 {
+    margin: 0 0 10px;
+    font-size: 26px;
+    font-weight: bold;
+}
+header h2 {
+    margin: 0 0 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.search-box input {
+    padding: 8px;
+    width: 60%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* KATEGORI BUTTONS (warna sesuai permintaan) */
+.category-buttons {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+.cat-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s;
+    color: #fff;
+}
+.cat-btn[data-cat="Referensi Umum"] { background: #7f8c8d; }
+.cat-btn[data-cat="Filsafat dan psikologi"] { background: #8e44ad; }
+.cat-btn[data-cat="Agama"] { background: #27ae60; }
+.cat-btn[data-cat="Ilmu sosial"] { background: #d35400; }
+.cat-btn[data-cat="Bahasa"] { background: #2980b9; }
+.cat-btn[data-cat="Sains dan matematika"] { background: #16a085; }
+.cat-btn[data-cat="Teknologi atau Ilmu terapan"] { background: #25565f; }
+.cat-btn[data-cat="Kesenian dan rekreasi"] { background: #e67e22; }
+.cat-btn[data-cat="Sastra"] { background: #9b59b6; }
+.cat-btn[data-cat="Sejarah dan geografi"] { background: #795548; }
+.cat-btn:hover {
+    filter: brightness(90%);
+}
+
+/* HASIL PENCARIAN - VERSI DITINGKATKAN */
+.search-results {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow-x: auto;
+    display: block;
+}
+
+.search-results table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+.search-results th {
+    background: #2c3e50;
+    color: white;
+    padding: 12px 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.search-results td {
+    padding: 12px 10px;
+    font-size: 14px;
+    color: #1e2a3a;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Zebra striping */
+.search-results tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+.search-results tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Hover */
+.search-results tbody tr:hover {
+    background-color: #eef2f7;
+    cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 15px;
+    text-align: center;
+    padding: 10px;
+}
+.pagination button {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    margin: 0 4px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.pagination button:disabled {
+    background-color: #b0bec5;
+    cursor: not-allowed;
+}
+
+/* CARD BUKU UTAMA */
 .book-card {
     max-width: 800px;
     margin: auto;
     display: flex;
     gap: 20px;
-    background: #fff;
+    background: #ffffff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     align-items: flex-start;
 }
 
-/* COVER */
+/* COVER & NO COVER */
+.book-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .book-image img {
     width: 130px;
     border-radius: 10px;
     object-fit: cover;
     transition: 0.3s;
 }
-
-/* efek hover */
 .book-image img:hover {
     transform: scale(1.05);
 }
-
-/* INFO */
-.book-image {
+#noCover {
+    width: 130px;
+    height: 180px;
+    font-size: 70px;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    background: #f0f3f5;
+    border-radius: 10px;
+    color: #aaa;
 }
-
 .book-image .book-actions {
     margin-top: 10px;
     display: flex;
     gap: 8px;
 }
+
+/* INFO BUKU */
 .book-info {
     flex: 1;
 }
-
 .book-info h2 {
     margin: 0;
-    color: #333;
+    color: #2c3e50;
 }
-
 .book-info h4 {
     margin: 5px 0 10px;
-    color: #666;
+    color: #555;
 }
-
 .book-info p {
     margin: 4px 0;
     color: #444;
 }
 
-/* TOMBOL */
-.book-actions {
-    margin-top: 15px;
-}
-
+/* TOMBOL UMUM (Baca, Unduh, Navigasi) */
 .btn {
     display: inline-block;
-    padding: 10px 16px;
-    margin-right: 10px;
-    border-radius: 10px;
+    padding: 8px 14px;
+    margin: 5px;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 13px;
     transition: 0.3s;
+    border: none;
+    cursor: pointer;
 }
-
-/* Baca */
 .read {
     background: #3498db;
-    color: white;
+    color: #fff;
 }
-
 .read:hover {
     background: #2980b9;
 }
-
-/* Unduh */
 .download {
-    background: #2ecc71;
-    color: white;
-}
-
-.download:hover {
     background: #27ae60;
+    color: #fff;
+}
+.download:hover {
+    background: #1e8449;
+}
+.nav {
+    background: #7f8c8d;
+    color: #fff;
+}
+.nav:hover:not(:disabled) {
+    background: #6c7a7a;
+}
+.close {
+    background: #e74c3c;
+    color: #fff;
+}
+.close:hover {
+    background: #c0392b;
+}
+.guest {
+    background: #9b59b6;
+    color: #fff;
+}
+.guest:hover {
+    background: #8e44ad;
 }
 
-/* RESPONSIVE */
+/* VIEWER PDF & FORM (muncul dengan fade) */
+.viewer {
+    max-width: 800px;
+    margin: 20px auto;
+    display: none;          /* default tersembunyi */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+.viewer.show {
+    display: block;        /* tampilkan saat kelas show ditambahkan */
+    opacity: 1;
+}
+.viewer-actions {
+    text-align: right;
+    padding: 10px;
+    background: #f5f7fa;
+    border-bottom: 1px solid #ddd;
+}
+.viewer iframe {
+    width: 100%;
+    height: 70vh;
+    min-height: 450px;
+    border: none;
+    display: block;
+}
+
+/* FOOTER & BUKU TAMU */
+.footer {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 20px;
+    background: #f7f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* RESPONSIVE (mobile) */
 @media (max-width: 600px) {
     .book-card {
         flex-direction: column;
         text-align: center;
+        align-items: center;
     }
-
-    .book-image img {
+    .book-image img, #noCover {
         width: 100px;
+        height: auto;
     }
-}
-
-#noCover {
-    width: 100%;
-    height: 250px; /* sesuaikan dengan tinggi cover */
-    font-size: 100px; /* BESAR IKON */
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    background: #f0f0f0;
-    border-radius: 10px;
-
-    color: #999; /* biar tidak terlalu mencolok */
+    .book-image .book-actions {
+        justify-content: center;
+    }
+    .viewer iframe {
+        height: 55vh;
+    }
+    .search-box input {
+        width: 85%;
+    }
 }
