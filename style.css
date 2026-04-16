@@ -14,7 +14,7 @@ button:disabled,
     opacity: 0.6;
 }
 
-/* HEADER (gradient biru tua) */
+/* HEADER  */
 header {
     background: linear-gradient(135deg, #d5ec78, #5baf93);
     color: #5265f6;
