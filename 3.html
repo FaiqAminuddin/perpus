@@ -365,7 +365,7 @@
     <div class="viewer-actions">
         <button id="btnClosePdf" class="btn close">✖ Tutup</button>
     </div>
-    <!-- iframe untuk PDF / Google Drive (PDF/video embed) -->
+    <!-- iframe untuk PDF / Google Drive -->
     <iframe id="pdfFrame" src="" title="Pratinjau Buku" loading="lazy" style="display: none;"></iframe>
     <!-- elemen video HTML5 untuk file video lokal/repo -->
     <video id="videoPlayer" controls style="display: none;" controlsList="nodownload">
@@ -404,7 +404,7 @@
         const rowsPerPage = 5;
         let currentMatches = [];
 
-        // ---------- Helper: konversi Google Drive ke embed (baik PDF maupun video) ----------
+        // ---------- Helper: konversi Google Drive ke embed ----------
         function getEmbedUrl(originalUrl) {
             if (!originalUrl || originalUrl === "#") return null;
             let url = originalUrl.trim();
@@ -416,26 +416,23 @@
             if (match1) fileId = match1[1];
             if (match2) fileId = match2[1];
             if (fileId) {
-                // embed universal (menangani PDF dan video dengan baik)
                 return `https://drive.google.com/file/d/${fileId}/preview`;
             }
-            // jika bukan drive, kembalikan url asli
             return url;
         }
 
-        // ---------- Deteksi tipe media berdasarkan ekstensi (file repository / local) ----------
+        // ---------- Deteksi tipe media ----------
         function getMediaType(url) {
             if (!url) return 'unknown';
             const lowerUrl = url.toLowerCase();
-            if (lowerUrl.includes('drive.google.com')) return 'google_drive'; // ditangani embed iframe
+            if (lowerUrl.includes('drive.google.com')) return 'google_drive';
             if (lowerUrl.endsWith('.pdf')) return 'pdf';
             if (lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || 
                 lowerUrl.endsWith('.mov') || lowerUrl.endsWith('.mkv') || 
-                lowerUrl.endsWith('.ogg') || lowerUrl.includes('.mp4?')) {
+                lowerUrl.endsWith('.ogg')) {
                 return 'video';
             }
-            // fallback ke pdf (coba iframe)
-            return 'pdf';
+            return 'pdf'; // default coba sebagai PDF
         }
 
         // ========== PARSE CSV ==========
@@ -565,13 +562,12 @@
             const videoSource = document.getElementById("videoSource");
             const closeBtn = document.getElementById("btnClosePdf");
 
-            // fungsi untuk mereset dan menampilkan media sesuai tipe
             function openMedia(rawUrl) {
                 if (!rawUrl || rawUrl === "#") {
                     alert("Maaf, file buku belum tersedia.");
                     return;
                 }
-                // Reset tampilan: sembunyikan iframe & video
+                // Reset tampilan
                 iframe.style.display = "none";
                 videoPlayer.style.display = "none";
                 videoPlayer.pause();
@@ -593,29 +589,18 @@
                     }
                 } 
                 else if (mediaType === 'video') {
-                    // file video dari repo atau server lokal
                     videoSource.src = finalUrl;
                     videoPlayer.load();
                     videoPlayer.style.display = "block";
-                    // tambahkan event error jika video tidak bisa diputar
                     videoPlayer.onerror = () => {
                         alert("Video tidak dapat diputar. Pastikan format didukung dan file tersedia.");
                         viewer.classList.remove("show");
                     };
                 } 
-                else if (mediaType === 'pdf') {
-                    // PDF biasa dari repo/lokal
+                else { // PDF atau unknown
                     iframe.src = finalUrl;
                     iframe.style.display = "block";
-                    iframe.onerror = () => {
-                        alert("PDF gagal dimuat. Periksa tautan atau ketersediaan file.");
-                        viewer.classList.remove("show");
-                    };
-                }
-                else {
-                    // fallback coba iframe
-                    iframe.src = finalUrl;
-                    iframe.style.display = "block";
+                    // Tidak ada onerror palsu; biarkan iframe menampilkan pesan default browser jika gagal
                 }
 
                 viewer.classList.add("show");
@@ -628,7 +613,6 @@
                 openMedia(rawUrl);
             });
 
-            // Tombol tutup bersihkan semua stream
             closeBtn.addEventListener("click", () => {
                 viewer.classList.remove("show");
                 iframe.src = "";
@@ -640,7 +624,7 @@
             });
         }
 
-        // ========== BUKU TAMU & STATISTIK (tetap) ==========
+        // ========== BUKU TAMU & STATISTIK ==========
         function initGuestBook() {
             const btnTamu = document.getElementById("btnBukuTamu");
             const formViewer = document.getElementById("formViewer");
@@ -724,7 +708,6 @@
                 initStats();
                 initCategoryFilter();
 
-                // Pencarian realtime
                 searchInput.addEventListener("input", (e) => {
                     const keyword = e.target.value.toLowerCase().trim();
                     const resultsDiv = document.getElementById("searchResults");
