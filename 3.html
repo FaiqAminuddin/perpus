@@ -5,322 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Perpus Tedunan - Perpustakaan Digital</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-        }
-
-        body {
-            background: #f1f8e9;
-            color: #1e2a1f;
-            padding: 1rem;
-            min-height: 100vh;
-        }
-
-        header {
-            background: #2e5c2e;
-            padding: 1.2rem;
-            border-radius: 28px;
-            color: white;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
-            margin-bottom: 1.8rem;
-        }
-
-        .search-box h1, .search-box h2 {
-            text-align: center;
-            letter-spacing: 1px;
-        }
-
-        .search-box h1 {
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .search-box h2 {
-            font-size: 1rem;
-            font-weight: normal;
-            margin-bottom: 16px;
-            color: #d9f0c5;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 60px;
-            font-size: 1rem;
-            outline: none;
-            background: #fff8e7;
-            transition: 0.2s;
-            margin-top: 8px;
-        }
-
-        #searchInput:focus {
-            box-shadow: 0 0 0 3px #ffc107;
-        }
-
-        .category-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-
-        .cat-btn {
-            background: #ffd966;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: #2d4a22;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.8rem;
-        }
-
-        .cat-btn:hover {
-            background: #ffbf2e;
-            transform: scale(0.97);
-        }
-
-        .search-results {
-            background: white;
-            border-radius: 24px;
-            margin-top: 8px;
-            max-height: 400px;
-            overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .search-results table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .search-results th, .search-results td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .search-results tr:hover {
-            background: #eef5e4;
-            cursor: pointer;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 12px;
-            background: #f9f5e3;
-            border-radius: 0 0 20px 20px;
-        }
-
-        .pagination button {
-            background: #2e5c2e;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
-        .book-card {
-            display: flex;
-            flex-wrap: wrap;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
-            overflow: hidden;
-            margin-bottom: 2rem;
-            transition: 0.2s;
-        }
-
-        .book-image {
-            flex: 1.2;
-            background: #ede7d9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            min-width: 200px;
-        }
-
-        .book-image img {
-            max-width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            border-radius: 16px;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
-        }
-
-        #noCover {
-            font-size: 5rem;
-            background: #bcbc9a;
-            width: 180px;
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            color: #4a3f2b;
-            box-shadow: inset 0 0 0 3px #fef7e0;
-        }
-
-        .book-info {
-            flex: 2;
-            padding: 1.8rem;
-        }
-
-        .book-info h2 {
-            color: #1f4f1a;
-            margin-bottom: 10px;
-        }
-
-        .book-info h4 {
-            color: #6b4c2c;
-            margin-bottom: 16px;
-            font-style: italic;
-        }
-
-        .book-info p {
-            margin: 8px 0;
-            line-height: 1.4;
-        }
-
-        .book-actions {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 60px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .btn.read {
-            background: #2c6e2c;
-            color: white;
-        }
-
-        .btn.download {
-            background: #ff9800;
-            color: #2d2b1f;
-        }
-
-        .btn.nav {
-            background: #6b8c5c;
-            color: white;
-        }
-
-        .btn.guest {
-            background: #4e3e2e;
-            color: white;
-        }
-
-        .btn.close {
-            background: #b3413a;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(0.96);
-        }
-
-        /* Viewer (popup / slide) */
-        .viewer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.92);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(6px);
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.2s, opacity 0.2s;
-        }
-
-        .viewer.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .viewer-actions {
-            width: 90%;
-            max-width: 1100px;
-            text-align: right;
-            margin-bottom: 12px;
-        }
-
-        #pdfFrame, #videoPlayer {
-            width: 90%;
-            height: 85%;
-            background: #1e1b13;
-            border-radius: 24px;
-            border: 2px solid #ffe6b3;
-            box-shadow: 0 20px 40px black;
-        }
-
-        #videoPlayer {
-            object-fit: contain;
-            background: black;
-        }
-
-        footer {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        @media (max-width: 760px) {
-            .book-card {
-                flex-direction: column;
-            }
-            .viewer-actions {
-                text-align: center;
-            }
-            #pdfFrame, #videoPlayer {
-                width: 95%;
-                height: 70%;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+        body { background: #f1f8e9; color: #1e2a1f; padding: 1rem; min-height: 100vh; }
+        header { background: #2e5c2e; padding: 1.2rem; border-radius: 28px; color: white; box-shadow: 0 6px 14px rgba(0,0,0,0.1); margin-bottom: 1.8rem; }
+        .search-box h1, .search-box h2 { text-align: center; letter-spacing: 1px; }
+        .search-box h1 { font-size: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .search-box h2 { font-size: 1rem; font-weight: normal; margin-bottom: 16px; color: #d9f0c5; }
+        #searchInput { width: 100%; padding: 12px 20px; border: none; border-radius: 60px; font-size: 1rem; outline: none; background: #fff8e7; margin-top: 8px; }
+        .category-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; justify-content: center; }
+        .cat-btn { background: #ffd966; border: none; padding: 8px 16px; border-radius: 40px; font-weight: bold; color: #2d4a22; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
+        .cat-btn:hover { background: #ffbf2e; transform: scale(0.97); }
+        .search-results { background: white; border-radius: 24px; margin-top: 8px; max-height: 400px; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; }
+        .search-results table { width: 100%; border-collapse: collapse; }
+        .search-results th, .search-results td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .search-results tr:hover { background: #eef5e4; cursor: pointer; }
+        .pagination { display: flex; justify-content: center; gap: 15px; padding: 12px; background: #f9f5e3; border-radius: 0 0 20px 20px; }
+        .pagination button { background: #2e5c2e; color: white; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; }
+        .book-card { display: flex; flex-wrap: wrap; background: white; border-radius: 32px; box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2); overflow: hidden; margin-bottom: 2rem; }
+        .book-image { flex: 1.2; background: #ede7d9; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; min-width: 200px; }
+        .book-image img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 16px; box-shadow: 0 8px 18px rgba(0,0,0,0.1); }
+        #noCover { font-size: 5rem; background: #bcbc9a; width: 180px; height: 240px; display: flex; align-items: center; justify-content: center; border-radius: 20px; color: #4a3f2b; box-shadow: inset 0 0 0 3px #fef7e0; }
+        .book-info { flex: 2; padding: 1.8rem; }
+        .book-info h2 { color: #1f4f1a; margin-bottom: 10px; }
+        .book-info h4 { color: #6b4c2c; margin-bottom: 16px; font-style: italic; }
+        .book-info p { margin: 8px 0; line-height: 1.4; }
+        .book-actions { margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 8px 20px; border: none; border-radius: 60px; font-weight: bold; text-decoration: none; display: inline-block; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .btn.read { background: #2c6e2c; color: white; }
+        .btn.download { background: #ff9800; color: #2d2b1f; }
+        .btn.nav { background: #6b8c5c; color: white; }
+        .btn.guest { background: #4e3e2e; color: white; }
+        .btn.close { background: #b3413a; color: white; margin-bottom: 10px; }
+        .btn.newtab { background: #2196f3; color: white; }
+        .btn:hover { transform: translateY(-2px); filter: brightness(0.96); }
+        .viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(6px); visibility: hidden; opacity: 0; transition: visibility 0.2s, opacity 0.2s; }
+        .viewer.show { visibility: visible; opacity: 1; }
+        .viewer-actions { width: 90%; max-width: 1100px; text-align: right; margin-bottom: 12px; display: flex; gap: 10px; justify-content: flex-end; }
+        #pdfFrame, #videoPlayer { width: 90%; height: 85%; background: #1e1b13; border-radius: 24px; border: 2px solid #ffe6b3; box-shadow: 0 20px 40px black; }
+        #videoPlayer { object-fit: contain; background: black; }
+        .info-message { color: #ffd966; text-align: center; margin-top: 10px; font-size: 0.9rem; background: #2c2c1c; padding: 6px 12px; border-radius: 40px; display: inline-block; }
+        footer { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+        @media (max-width: 760px) { .book-card { flex-direction: column; } .viewer-actions { text-align: center; } #pdfFrame, #videoPlayer { width: 95%; height: 70%; } }
     </style>
 </head>
 <body>
 <header>
-    <div class="search-box">
-        <h1>📖 PERPUSTAKAAN DIGITAL</h1>
-        <h2>Tedunan Wedung Demak</h2>
-        <input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off">
-    </div>
+    <div class="search-box"><h1>📖 PERPUSTAKAAN DIGITAL</h1><h2>Tedunan Wedung Demak</h2>
+    <input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off"></div>
     <div id="searchResults" class="search-results"></div>
     <div class="category-buttons">
         <button class="cat-btn" data-cat="Referensi Umum">Referensi Umum</button>
@@ -340,407 +71,311 @@
     <div class="book-image">
         <img id="cover" src="" alt="Sampul Buku" style="display:none;">
         <div id="noCover">📚</div>
-        <div class="book-actions">
-            <a id="btnBaca" class="btn read">📖 Baca</a>
-            <a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a>
-        </div>
+        <div class="book-actions"><a id="btnBaca" class="btn read">📖 Baca</a><a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a></div>
     </div>
     <div class="book-info">
-        <h2 id="judul">Memuat...</h2>
-        <h4 id="penulis"></h4>
-        <p><strong>Penerbit:</strong> <span id="penerbit"></span></p>
-        <p><strong>Kota:</strong> <span id="kota"></span></p>
-        <p><strong>Tahun:</strong> <span id="tahun"></span></p>
-        <p><strong>ISBN:</strong> <span id="isbn"></span></p>
+        <h2 id="judul">Memuat...</h2><h4 id="penulis"></h4>
+        <p><strong>Penerbit:</strong> <span id="penerbit"></span></p><p><strong>Kota:</strong> <span id="kota"></span></p>
+        <p><strong>Tahun:</strong> <span id="tahun"></span></p><p><strong>ISBN:</strong> <span id="isbn"></span></p>
         <p><strong>Kategori:</strong> <span id="kategori"></span></p>
-        <div class="book-actions">
-            <button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button>
-            <button id="btnNext" class="btn nav">➡️ Selanjutnya</button>
-        </div>
+        <div class="book-actions"><button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button><button id="btnNext" class="btn nav">➡️ Selanjutnya</button></div>
     </div>
 </div>
 
-<!-- VIEWER DINAMIS: support PDF + Video -->
-<div id="pdfViewer" class="viewer">
+<!-- VIEWER DINAMIS -->
+<div id="mediaViewer" class="viewer">
     <div class="viewer-actions">
-        <button id="btnClosePdf" class="btn close">✖ Tutup</button>
+        <button id="btnOpenNewTab" class="btn newtab">🔗 Buka di Tab Baru</button>
+        <button id="btnCloseViewer" class="btn close">✖ Tutup</button>
     </div>
-    <!-- iframe untuk PDF / Google Drive -->
     <iframe id="pdfFrame" src="" title="Pratinjau Buku" loading="lazy" style="display: none;"></iframe>
-    <!-- elemen video HTML5 untuk file video lokal/repo -->
     <video id="videoPlayer" controls style="display: none;" controlsList="nodownload">
         <source id="videoSource" src="" type="video/mp4">
         Browser tidak mendukung video.
     </video>
+    <div id="infoMsg" class="info-message" style="display: none;"></div>
 </div>
 
-<!-- BUKU TAMU dan Statistik -->
 <footer class="footer">
     <button id="btnBukuTamu" class="btn guest">✍️ Silakan mengisi Buku Tamu</button>
     <button id="btnStatistik" class="btn guest">📊 Statistik</button>
-
-    <div id="formViewer" class="viewer">
-        <div class="viewer-actions">
-            <button id="btnCloseForm" class="btn close">✖ Tutup Form</button>
-        </div>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd-VGoKrk3Hyn9VHav2KnN4BLO5ttCA20VjWQPlxSEllz5xbQ/viewform?embedded=true" width="100%" height="600px">Memuat Form Buku Tamu...</iframe>
-    </div>
-
-    <div id="statsViewer" class="viewer">
-        <div class="viewer-actions">
-            <button id="btnCloseStats" class="btn close">✖ Tutup Statistik</button>
-        </div>
-        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQD_rDJXwTo8vJb1oFFuzSTnLA16jBnle2c97RkAjKmObAo6FHyE8nUs2PGRFQDLhjXtl-d4b1YgGBm/pubhtml?widget=true&amp;headers=false" width="100%" height="600px">Memuat Statistik...</iframe>
-    </div>
+    <div id="formViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseForm" class="btn close">✖ Tutup Form</button></div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd-VGoKrk3Hyn9VHav2KnN4BLO5ttCA20VjWQPlxSEllz5xbQ/viewform?embedded=true" width="100%" height="600px"></iframe></div>
+    <div id="statsViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseStats" class="btn close">✖ Tutup Statistik</button></div><iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQD_rDJXwTo8vJb1oFFuzSTnLA16jBnle2c97RkAjKmObAo6FHyE8nUs2PGRFQDLhjXtl-d4b1YgGBm/pubhtml?widget=true&amp;headers=false" width="100%" height="600px"></iframe></div>
 </footer>
 
 <script>
-    (function(){
-        // ======================= DATA =======================
-        let dataRows = [];
-        let currentIndex = 1;
-        const searchInput = document.getElementById("searchInput");
-        let currentPage = 1;
-        const rowsPerPage = 5;
-        let currentMatches = [];
+(function(){
+    let dataRows = [];
+    let currentIndex = 1;
+    const searchInput = document.getElementById("searchInput");
+    let currentPage = 1;
+    const rowsPerPage = 5;
+    let currentMatches = [];
 
-        // ---------- Helper: konversi Google Drive ke embed ----------
-        function getEmbedUrl(originalUrl) {
-            if (!originalUrl || originalUrl === "#") return null;
-            let url = originalUrl.trim();
-            let fileId = null;
-            const drivePattern1 = /drive\.google\.com\/file\/d\/([^\/]+)/;
-            const drivePattern2 = /drive\.google\.com\/open\?id=([^&]+)/;
-            const match1 = url.match(drivePattern1);
-            const match2 = url.match(drivePattern2);
-            if (match1) fileId = match1[1];
-            if (match2) fileId = match2[1];
-            if (fileId) {
-                return `https://drive.google.com/file/d/${fileId}/preview`;
-            }
-            return url;
+    // Helper: konversi Google Drive ke embed
+    function getEmbedUrl(originalUrl) {
+        if (!originalUrl || originalUrl === "#") return null;
+        let url = originalUrl.trim();
+        let fileId = null;
+        const match1 = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
+        const match2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+        if (match1) fileId = match1[1];
+        if (match2) fileId = match2[1];
+        if (fileId) return `https://drive.google.com/file/d/${fileId}/preview`;
+        return url;
+    }
+
+    // Deteksi tipe media
+    function getMediaType(url) {
+        if (!url) return 'unknown';
+        const lower = url.toLowerCase();
+        if (lower.includes('drive.google.com')) return 'google_drive';
+        if (lower.endsWith('.pdf')) return 'pdf';
+        if (lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.mov') || lower.endsWith('.mkv') || lower.endsWith('.ogg')) return 'video';
+        return 'pdf'; // default treat as pdf
+    }
+
+    // Parsing CSV sederhana
+    function parseCSV(row) {
+        const matches = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+        if (!matches) return [];
+        return matches.map(item => item.replace(/^"|"$/g, '').trim());
+    }
+
+    // Tampilkan data buku ke card
+    function tampilkanData(index) {
+        if (!dataRows.length || index >= dataRows.length || index < 1) return;
+        const cols = parseCSV(dataRows[index]);
+        if (cols.length < 7) return;
+        document.getElementById("judul").innerText = cols[0] || "Judul tidak tersedia";
+        document.getElementById("penulis").innerText = cols[1] || "-";
+        document.getElementById("penerbit").innerText = cols[2] || "-";
+        document.getElementById("kota").innerText = cols[3] || "-";
+        document.getElementById("tahun").innerText = cols[4] || "-";
+        document.getElementById("isbn").innerText = cols[5] || "-";
+        document.getElementById("kategori").innerText = cols[8] || "-";
+
+        const coverImg = document.getElementById("cover");
+        const noCoverDiv = document.getElementById("noCover");
+        const coverUrl = cols[6] ? cols[6].trim() : "";
+        if (coverUrl && coverUrl !== "") {
+            coverImg.src = coverUrl;
+            coverImg.style.display = "block";
+            noCoverDiv.style.display = "none";
+            coverImg.onerror = () => { coverImg.style.display = "none"; noCoverDiv.style.display = "flex"; };
+        } else {
+            coverImg.style.display = "none";
+            noCoverDiv.style.display = "flex";
         }
 
-        // ---------- Deteksi tipe media ----------
-        function getMediaType(url) {
-            if (!url) return 'unknown';
-            const lowerUrl = url.toLowerCase();
-            if (lowerUrl.includes('drive.google.com')) return 'google_drive';
-            if (lowerUrl.endsWith('.pdf')) return 'pdf';
-            if (lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || 
-                lowerUrl.endsWith('.mov') || lowerUrl.endsWith('.mkv') || 
-                lowerUrl.endsWith('.ogg')) {
-                return 'video';
-            }
-            return 'pdf'; // default coba sebagai PDF
+        let fileUrl = cols[7] ? cols[7].trim() : "#";
+        const btnBaca = document.getElementById("btnBaca");
+        const btnUnduh = document.getElementById("btnUnduh");
+        btnBaca.setAttribute("data-fileurl", fileUrl);
+        btnUnduh.href = fileUrl;
+        if (!fileUrl || fileUrl === "#") {
+            btnBaca.style.opacity = "0.6"; btnUnduh.style.opacity = "0.6";
+            btnBaca.style.pointerEvents = "none"; btnUnduh.style.pointerEvents = "none";
+        } else {
+            btnBaca.style.opacity = "1"; btnUnduh.style.opacity = "1";
+            btnBaca.style.pointerEvents = "auto"; btnUnduh.style.pointerEvents = "auto";
         }
+    }
 
-        // ========== PARSE CSV ==========
-        function parseCSV(row) {
-            const matches = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-            if (!matches) return [];
-            return matches.map(item => item.replace(/^"|"$/g, '').trim());
-        }
-
-        // ========== TAMPILKAN DATA BUKU ==========
-        function tampilkanData(index) {
-            if (!dataRows.length || index >= dataRows.length || index < 1) return;
-            const cols = parseCSV(dataRows[index]);
-            if (cols.length < 7) return;
-
-            document.getElementById("judul").innerText = cols[0] || "Judul tidak tersedia";
-            document.getElementById("penulis").innerText = cols[1] || "-";
-            document.getElementById("penerbit").innerText = cols[2] || "-";
-            document.getElementById("kota").innerText = cols[3] || "-";
-            document.getElementById("tahun").innerText = cols[4] || "-";
-            document.getElementById("isbn").innerText = cols[5] || "-";
-            document.getElementById("kategori").innerText = cols[8] || "-";
-
-            const coverImg = document.getElementById("cover");
-            const noCoverDiv = document.getElementById("noCover");
-            const coverUrl = cols[6] ? cols[6].trim() : "";
-            
-            if (coverUrl && coverUrl !== "") {
-                coverImg.src = coverUrl;
-                coverImg.style.display = "block";
-                noCoverDiv.style.display = "none";
-                coverImg.onerror = () => {
-                    coverImg.style.display = "none";
-                    noCoverDiv.style.display = "flex";
-                };
-            } else {
-                coverImg.style.display = "none";
-                noCoverDiv.style.display = "flex";
-            }
-
-            let fileUrl = cols[7] ? cols[7].trim() : "#";
-            const btnBaca = document.getElementById("btnBaca");
-            const btnUnduh = document.getElementById("btnUnduh");
-            btnBaca.setAttribute("data-fileurl", fileUrl);
-            btnUnduh.href = fileUrl;
-            if (!fileUrl || fileUrl === "#") {
-                btnBaca.style.opacity = "0.6";
-                btnUnduh.style.opacity = "0.6";
-                btnBaca.style.pointerEvents = "none";
-                btnUnduh.style.pointerEvents = "none";
-            } else {
-                btnBaca.style.opacity = "1";
-                btnUnduh.style.opacity = "1";
-                btnBaca.style.pointerEvents = "auto";
-                btnUnduh.style.pointerEvents = "auto";
-            }
-        }
-
-        // ========== PENCARIAN & TABEL ==========
-        function renderTable(matches) {
-            const resultsDiv = document.getElementById("searchResults");
-            resultsDiv.innerHTML = "";
-            currentMatches = matches;
-            if (matches.length === 0) {
-                resultsDiv.style.display = "block";
-                resultsDiv.innerHTML = "<p style='padding:15px;'>📭 Tidak ada hasil yang cocok</p>";
-                return;
-            }
-            resultsDiv.style.display = "block";
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const paginated = matches.slice(start, end);
-            const table = document.createElement("table");
-            table.innerHTML = `<thead><tr><th>Judul Buku</th><th>Penulis</th><th>Tahun</th></tr></thead>`;
-            const tbody = document.createElement("tbody");
-            paginated.forEach(item => {
-                const cols = parseCSV(dataRows[item.index]);
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>${escapeHtml(item.judul)}</td><td>${escapeHtml(item.penulis)}</td><td>${cols[4] || "-"}</td>`;
-                row.addEventListener("click", () => {
-                    currentIndex = item.index;
-                    tampilkanData(currentIndex);
-                    updateButtonState();
-                    resultsDiv.style.display = "none";
-                    if (searchInput) searchInput.value = "";
-                    document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                });
-                tbody.appendChild(row);
-            });
-            table.appendChild(tbody);
-            resultsDiv.appendChild(table);
-            const paginationDiv = document.createElement("div");
-            paginationDiv.className = "pagination";
-            const prevBtn = document.createElement("button");
-            prevBtn.textContent = "⬅️ Sebelumnya";
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.addEventListener("click", () => { currentPage--; renderTable(currentMatches); });
-            const nextBtn = document.createElement("button");
-            nextBtn.textContent = "➡️ Berikutnya";
-            nextBtn.disabled = end >= matches.length;
-            nextBtn.addEventListener("click", () => { currentPage++; renderTable(currentMatches); });
-            const pageInfo = document.createTextNode(` Halaman ${currentPage} `);
-            paginationDiv.appendChild(prevBtn);
-            paginationDiv.appendChild(pageInfo);
-            paginationDiv.appendChild(nextBtn);
-            resultsDiv.appendChild(paginationDiv);
-        }
-
-        function escapeHtml(str) {
-            if(!str) return "";
-            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-        }
-
-        function updateButtonState() {
-            const btnPrev = document.getElementById("btnPrev");
-            const btnNext = document.getElementById("btnNext");
-            if (btnPrev) btnPrev.disabled = (currentIndex <= 1);
-            if (btnNext) btnNext.disabled = (currentIndex >= dataRows.length - 1);
-        }
-
-        // ========== FITUR BACA : SUPPORT PDF & VIDEO (Google Drive / Repo) ==========
-        function initReadButton() {
-            const btnBaca = document.getElementById("btnBaca");
-            const viewer = document.getElementById("pdfViewer");
-            const iframe = document.getElementById("pdfFrame");
-            const videoPlayer = document.getElementById("videoPlayer");
-            const videoSource = document.getElementById("videoSource");
-            const closeBtn = document.getElementById("btnClosePdf");
-
-            function openMedia(rawUrl) {
-                if (!rawUrl || rawUrl === "#") {
-                    alert("Maaf, file buku belum tersedia.");
-                    return;
-                }
-                // Reset tampilan
-                iframe.style.display = "none";
-                videoPlayer.style.display = "none";
-                videoPlayer.pause();
-                iframe.src = "";
-                videoSource.src = "";
-                videoPlayer.load();
-
-                const mediaType = getMediaType(rawUrl);
-                let finalUrl = rawUrl;
-
-                if (mediaType === 'google_drive') {
-                    finalUrl = getEmbedUrl(rawUrl);
-                    if (finalUrl) {
-                        iframe.src = finalUrl;
-                        iframe.style.display = "block";
-                    } else {
-                        alert("Gagal memproses link Google Drive.");
-                        return;
-                    }
-                } 
-                else if (mediaType === 'video') {
-                    videoSource.src = finalUrl;
-                    videoPlayer.load();
-                    videoPlayer.style.display = "block";
-                    videoPlayer.onerror = () => {
-                        alert("Video tidak dapat diputar. Pastikan format didukung dan file tersedia.");
-                        viewer.classList.remove("show");
-                    };
-                } 
-                else { // PDF atau unknown
-                    iframe.src = finalUrl;
-                    iframe.style.display = "block";
-                    // Tidak ada onerror palsu; biarkan iframe menampilkan pesan default browser jika gagal
-                }
-
-                viewer.classList.add("show");
-                viewer.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-
-            btnBaca.addEventListener("click", (e) => {
-                e.preventDefault();
-                const rawUrl = btnBaca.getAttribute("data-fileurl");
-                openMedia(rawUrl);
-            });
-
-            closeBtn.addEventListener("click", () => {
-                viewer.classList.remove("show");
-                iframe.src = "";
-                videoPlayer.pause();
-                videoSource.src = "";
-                videoPlayer.load();
-                iframe.style.display = "none";
-                videoPlayer.style.display = "none";
-            });
-        }
-
-        // ========== BUKU TAMU & STATISTIK ==========
-        function initGuestBook() {
-            const btnTamu = document.getElementById("btnBukuTamu");
-            const formViewer = document.getElementById("formViewer");
-            const closeForm = document.getElementById("btnCloseForm");
-            if (btnTamu && formViewer) {
-                btnTamu.addEventListener("click", () => formViewer.classList.add("show"));
-                closeForm.addEventListener("click", () => formViewer.classList.remove("show"));
-            }
-        }
-
-        function initStats() {
-            const btnStats = document.getElementById("btnStatistik");
-            const statsViewer = document.getElementById("statsViewer");
-            const closeStats = document.getElementById("btnCloseStats");
-            if (btnStats && statsViewer) {
-                btnStats.addEventListener("click", () => statsViewer.classList.add("show"));
-                closeStats.addEventListener("click", () => statsViewer.classList.remove("show"));
-            }
-        }
-
-        // ========== FILTER KATEGORI ==========
-        function initCategoryFilter() {
-            document.querySelectorAll(".cat-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const kategoriTarget = btn.getAttribute("data-cat").toLowerCase();
-                    const resultsDiv = document.getElementById("searchResults");
-                    let matches = [];
-                    for (let i = 1; i < dataRows.length; i++) {
-                        const cols = parseCSV(dataRows[i]);
-                        const catBuku = (cols[8] || "").toLowerCase();
-                        if (catBuku.includes(kategoriTarget)) {
-                            matches.push({ index: i, judul: cols[0], penulis: cols[1] });
-                        }
-                    }
-                    if (matches.length) {
-                        currentPage = 1;
-                        renderTable(matches);
-                    } else {
-                        resultsDiv.style.display = "block";
-                        resultsDiv.innerHTML = "<p>📌 Tidak ditemukan buku dalam kategori ini.</p>";
-                    }
-                });
-            });
-        }
-
-        // ========== LOAD CSV DAN START ==========
-        fetch('buku.csv')
-            .then(res => {
-                if (!res.ok) throw new Error("CSV tidak ditemukan");
-                return res.text();
-            })
-            .then(text => {
-                dataRows = text.trim().split(/\r?\n/);
-                if (dataRows.length < 2) {
-                    document.getElementById("judul").innerText = "Data buku kosong";
-                    return;
-                }
-                currentIndex = 1;
+    // Render tabel pencarian dengan pagination
+    function renderTable(matches) {
+        const resultsDiv = document.getElementById("searchResults");
+        resultsDiv.innerHTML = "";
+        currentMatches = matches;
+        if (matches.length === 0) { resultsDiv.style.display = "block"; resultsDiv.innerHTML = "<p style='padding:15px;'>📭 Tidak ada hasil yang cocok</p>"; return; }
+        resultsDiv.style.display = "block";
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginated = matches.slice(start, end);
+        const table = document.createElement("table");
+        table.innerHTML = `<thead><tr><th>Judul Buku</th><th>Penulis</th><th>Tahun</th></tr></thead>`;
+        const tbody = document.createElement("tbody");
+        paginated.forEach(item => {
+            const cols = parseCSV(dataRows[item.index]);
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${escapeHtml(item.judul)}</td><td>${escapeHtml(item.penulis)}</td><td>${cols[4] || "-"}</td>`;
+            row.addEventListener("click", () => {
+                currentIndex = item.index;
                 tampilkanData(currentIndex);
                 updateButtonState();
-
-                const btnNext = document.getElementById("btnNext");
-                const btnPrev = document.getElementById("btnPrev");
-                btnNext.addEventListener("click", () => {
-                    if (currentIndex < dataRows.length - 1) {
-                        currentIndex++;
-                        tampilkanData(currentIndex);
-                        updateButtonState();
-                    }
-                });
-                btnPrev.addEventListener("click", () => {
-                    if (currentIndex > 1) {
-                        currentIndex--;
-                        tampilkanData(currentIndex);
-                        updateButtonState();
-                    }
-                });
-
-                initReadButton();
-                initGuestBook();
-                initStats();
-                initCategoryFilter();
-
-                searchInput.addEventListener("input", (e) => {
-                    const keyword = e.target.value.toLowerCase().trim();
-                    const resultsDiv = document.getElementById("searchResults");
-                    if (!keyword) {
-                        resultsDiv.style.display = "none";
-                        tampilkanData(currentIndex);
-                        updateButtonState();
-                        return;
-                    }
-                    let matches = [];
-                    for (let i = 1; i < dataRows.length; i++) {
-                        const cols = parseCSV(dataRows[i]);
-                        const judul = (cols[0] || "").toLowerCase();
-                        const penulis = (cols[1] || "").toLowerCase();
-                        if (judul.includes(keyword) || penulis.includes(keyword)) {
-                            matches.push({ index: i, judul: cols[0], penulis: cols[1] });
-                        }
-                    }
-                    if (matches.length) {
-                        currentPage = 1;
-                        renderTable(matches);
-                    } else {
-                        resultsDiv.style.display = "block";
-                        resultsDiv.innerHTML = "<p>🔍 Tidak ada buku yang cocok</p>";
-                    }
-                });
-            })
-            .catch(err => {
-                console.error("Gagal memuat CSV:", err);
-                document.getElementById("judul").innerText = "Gagal memuat data buku";
-                document.getElementById("penulis").innerText = "Periksa file buku.csv";
+                resultsDiv.style.display = "none";
+                if (searchInput) searchInput.value = "";
+                document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
             });
-    })();
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+        resultsDiv.appendChild(table);
+        const paginationDiv = document.createElement("div");
+        paginationDiv.className = "pagination";
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "⬅️ Sebelumnya";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.addEventListener("click", () => { currentPage--; renderTable(currentMatches); });
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "➡️ Berikutnya";
+        nextBtn.disabled = end >= matches.length;
+        nextBtn.addEventListener("click", () => { currentPage++; renderTable(currentMatches); });
+        const pageInfo = document.createTextNode(` Halaman ${currentPage} `);
+        paginationDiv.appendChild(prevBtn); paginationDiv.appendChild(pageInfo); paginationDiv.appendChild(nextBtn);
+        resultsDiv.appendChild(paginationDiv);
+    }
+
+    function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+    function updateButtonState() {
+        document.getElementById("btnPrev").disabled = (currentIndex <= 1);
+        document.getElementById("btnNext").disabled = (currentIndex >= dataRows.length - 1);
+    }
+
+    // ========== BACA DENGAN GOOGLE DOCS VIEWER UNTUK PDF ==========
+    function initReadButton() {
+        const btnBaca = document.getElementById("btnBaca");
+        const viewer = document.getElementById("mediaViewer");
+        const iframe = document.getElementById("pdfFrame");
+        const videoPlayer = document.getElementById("videoPlayer");
+        const videoSource = document.getElementById("videoSource");
+        const closeBtn = document.getElementById("btnCloseViewer");
+        const openNewTabBtn = document.getElementById("btnOpenNewTab");
+        const infoMsg = document.getElementById("infoMsg");
+        let currentFileUrl = "";
+
+        function openMedia(rawUrl) {
+            if (!rawUrl || rawUrl === "#") { alert("File belum tersedia."); return; }
+            currentFileUrl = rawUrl;
+            // Reset tampilan
+            iframe.style.display = "none";
+            videoPlayer.style.display = "none";
+            videoPlayer.pause();
+            iframe.src = "";
+            videoSource.src = "";
+            videoPlayer.load();
+            infoMsg.style.display = "none";
+            infoMsg.innerHTML = "";
+
+            const mediaType = getMediaType(rawUrl);
+            let finalUrl = rawUrl;
+
+            if (mediaType === 'google_drive') {
+                finalUrl = getEmbedUrl(rawUrl);
+                if (finalUrl) {
+                    iframe.src = finalUrl;
+                    iframe.style.display = "block";
+                    infoMsg.style.display = "block";
+                    infoMsg.innerHTML = "⚠️ Jika dokumen tidak muncul, coba klik 'Buka di Tab Baru'.";
+                } else { alert("Gagal memproses link Google Drive."); return; }
+            }
+            else if (mediaType === 'video') {
+                videoSource.src = finalUrl;
+                videoPlayer.load();
+                videoPlayer.style.display = "block";
+                videoPlayer.onerror = () => {
+                    infoMsg.style.display = "block";
+                    infoMsg.innerHTML = "❌ Video gagal diputar. Klik 'Buka di Tab Baru' untuk menonton langsung.";
+                };
+            }
+            else { 
+                // PDF: gunakan Google Docs Viewer agar selalu bisa tampil meskipun server melarang embed
+                const encodedUrl = encodeURIComponent(finalUrl);
+                const googleViewerUrl = `https://docs.google.com/viewer?url=${encodedUrl}&embedded=true`;
+                iframe.src = googleViewerUrl;
+                iframe.style.display = "block";
+                infoMsg.style.display = "block";
+                infoMsg.innerHTML = "📄 Menampilkan PDF melalui Google Docs Viewer. Jika masih kosong, pastikan file dapat diakses publik dan coba 'Buka di Tab Baru'.";
+            }
+
+            viewer.classList.add("show");
+            viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        btnBaca.addEventListener("click", (e) => {
+            e.preventDefault();
+            openMedia(btnBaca.getAttribute("data-fileurl"));
+        });
+
+        closeBtn.addEventListener("click", () => {
+            viewer.classList.remove("show");
+            iframe.src = "";
+            videoPlayer.pause();
+            videoSource.src = "";
+            videoPlayer.load();
+            iframe.style.display = "none";
+            videoPlayer.style.display = "none";
+        });
+
+        openNewTabBtn.addEventListener("click", () => {
+            if (currentFileUrl) window.open(currentFileUrl, '_blank');
+        });
+    }
+
+    // Buku tamu & statistik
+    function initGuestBook() {
+        const btn = document.getElementById("btnBukuTamu");
+        const viewer = document.getElementById("formViewer");
+        const close = document.getElementById("btnCloseForm");
+        btn.onclick = () => viewer.classList.add("show");
+        close.onclick = () => viewer.classList.remove("show");
+    }
+    function initStats() {
+        const btn = document.getElementById("btnStatistik");
+        const viewer = document.getElementById("statsViewer");
+        const close = document.getElementById("btnCloseStats");
+        btn.onclick = () => viewer.classList.add("show");
+        close.onclick = () => viewer.classList.remove("show");
+    }
+    function initCategoryFilter() {
+        document.querySelectorAll(".cat-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const target = btn.getAttribute("data-cat").toLowerCase();
+                let matches = [];
+                for (let i = 1; i < dataRows.length; i++) {
+                    const cols = parseCSV(dataRows[i]);
+                    const cat = (cols[8] || "").toLowerCase();
+                    if (cat.includes(target)) matches.push({ index: i, judul: cols[0], penulis: cols[1] });
+                }
+                const resultsDiv = document.getElementById("searchResults");
+                if (matches.length) { currentPage = 1; renderTable(matches); }
+                else { resultsDiv.style.display = "block"; resultsDiv.innerHTML = "<p>📌 Tidak ditemukan buku dalam kategori ini.</p>"; }
+            });
+        });
+    }
+
+    // Load CSV
+    fetch('buku.csv')
+        .then(res => { if (!res.ok) throw new Error("CSV tidak ditemukan"); return res.text(); })
+        .then(text => {
+            dataRows = text.trim().split(/\r?\n/);
+            if (dataRows.length < 2) { document.getElementById("judul").innerText = "Data buku kosong"; return; }
+            currentIndex = 1;
+            tampilkanData(currentIndex);
+            updateButtonState();
+            document.getElementById("btnNext").addEventListener("click", () => { if (currentIndex < dataRows.length-1) { currentIndex++; tampilkanData(currentIndex); updateButtonState(); } });
+            document.getElementById("btnPrev").addEventListener("click", () => { if (currentIndex > 1) { currentIndex--; tampilkanData(currentIndex); updateButtonState(); } });
+            initReadButton();
+            initGuestBook();
+            initStats();
+            initCategoryFilter();
+            searchInput.addEventListener("input", (e) => {
+                const keyword = e.target.value.toLowerCase().trim();
+                const resultsDiv = document.getElementById("searchResults");
+                if (!keyword) { resultsDiv.style.display = "none"; tampilkanData(currentIndex); updateButtonState(); return; }
+                let matches = [];
+                for (let i = 1; i < dataRows.length; i++) {
+                    const cols = parseCSV(dataRows[i]);
+                    const judul = (cols[0] || "").toLowerCase();
+                    const penulis = (cols[1] || "").toLowerCase();
+                    if (judul.includes(keyword) || penulis.includes(keyword)) matches.push({ index: i, judul: cols[0], penulis: cols[1] });
+                }
+                if (matches.length) { currentPage = 1; renderTable(matches); }
+                else { resultsDiv.style.display = "block"; resultsDiv.innerHTML = "<p>🔍 Tidak ada buku yang cocok</p>"; }
+            });
+        })
+        .catch(err => { console.error(err); document.getElementById("judul").innerText = "Gagal memuat data buku"; document.getElementById("penulis").innerText = "Periksa file buku.csv"; });
+})();
 </script>
 </body>
 </html>
