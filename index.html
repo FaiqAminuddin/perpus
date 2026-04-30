@@ -66,6 +66,7 @@
 <div id="loginOverlay" class="overlay"><div class="modal-card" id="loginModalCard"></div></div>
 <div id="profilOverlay" class="overlay"><div class="modal-card"><h2>👤 Profil Pengguna</h2><div id="profilContent"></div><button id="btnLogout" class="btn close" style="margin-top:15px;">🚪 Logout</button><button id="btnTutupProfil" class="btn nav">Tutup</button></div></div>
 <div id="toastMsg" class="toast"></div>
+<iframe name="hiddenFrame" style="display:none"></iframe>
 
 <header>
     <div class="search-box"><h1>📖 PERPUSTAKAAN DIGITAL</h1><h2>Tedunan Wedung Demak</h2><input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off"></div>
@@ -105,11 +106,12 @@
 </footer>
 
 <script>
-    // Konfigurasi Google Form untuk aktivitas
+    // ==================== KONFIGURASI GOOGLE FORM (GANTI DENGAN MILIK ANDA) ====================
     const FORM_ACTIVITY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSer60Wv1n-8UNTumz_k9KPY4NEI9pJGScDyijMvEPsZRGMgdg/formResponse";
     const ENTRY_NAMA = "entry.293670136";
     const ENTRY_AKTIVITAS = "entry.994210116";
     const ENTRY_JUDUL = "entry.498947527";
+    // ============================================================================================
 
     let currentUser = null;
     let dataRows = [];
@@ -129,16 +131,38 @@
         setTimeout(() => toast.style.opacity = "0", 2500);
     }
 
+    // ==================== LOG ACTIVITY DENGAN FORM SUBMIT (TARGET IFRAME) ====================
     function logActivity(activity, judulBuku) {
         if (!currentUser) return;
         let tampilanNama = currentUser.nama;
         if (!currentUser.isAnggota && currentUser.status) tampilanNama = `${currentUser.nama} (${currentUser.status})`;
         else if (currentUser.isAnggota) tampilanNama = `${currentUser.nama} (Anggota)`;
-        const fd = new URLSearchParams();
-        fd.append(ENTRY_NAMA, tampilanNama);
-        fd.append(ENTRY_AKTIVITAS, activity);
-        fd.append(ENTRY_JUDUL, judulBuku);
-        fetch(FORM_ACTIVITY_URL, { method: "POST", mode: "no-cors", body: fd.toString() }).catch(e => console.warn(e));
+        
+        // Buat form sementara dan submit ke iframe tersembunyi
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = FORM_ACTIVITY_URL;
+        form.target = 'hiddenFrame';
+        form.style.display = 'none';
+        
+        const addField = (name, value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        };
+        addField(ENTRY_NAMA, tampilanNama);
+        addField(ENTRY_AKTIVITAS, activity);
+        addField(ENTRY_JUDUL, judulBuku);
+        
+        document.body.appendChild(form);
+        form.submit();
+        // Hapus form setelah submit
+        setTimeout(() => form.remove(), 1000);
+        
+        console.log(`[LOG] ${tampilanNama} - ${activity} - ${judulBuku}`);
+        showToast(`📝 ${activity} tercatat (cek sheet)`);
     }
 
     // ==================== LOGIN & PROFIL ====================
