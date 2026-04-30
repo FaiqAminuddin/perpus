@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Perpus Tedunan - Perpustakaan Digital</title>
     <style>
-        /* ========== STYLE ========== */
+        /* ========== STYLE (sama seperti sebelumnya) ========== */
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 20px; color: #333; }
         button:disabled, .btn.nav:disabled { background: #ddd !important; cursor: not-allowed; opacity: 0.6; }
@@ -33,7 +34,7 @@
         .search-results tbody tr:hover { background-color: #eef2f7; cursor: pointer; }
         .pagination { margin-top: 15px; text-align: center; padding: 10px; }
         .pagination button { background-color: #2c3e50; color: white; border: none; padding: 6px 14px; margin: 0 4px; border-radius: 6px; cursor: pointer; }
-        .book-card { max-width: 800px; margin: auto; display: flex; gap: 20px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); align-items: flex-start; }
+        .book-card { max-width: 800px; margin: auto; display: flex; gap: 20px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); align-items: flex-start; position: relative; }
         .book-image { display: flex; flex-direction: column; align-items: center; }
         .book-image img { width: 130px; border-radius: 10px; }
         #noCover { width: 130px; height: 180px; font-size: 70px; display: flex; align-items: center; justify-content: center; background: #f0f3f5; border-radius: 10px; color: #aaa; }
@@ -46,6 +47,7 @@
         .nav { background: #7f8c8d; color: #fff; }
         .close { background: #e74c3c; color: #fff; }
         .guest { background: #9b59b6; color: #fff; }
+        .share-btn { background: #f39c12; color: #fff; }
         .viewer { max-width: 800px; margin: 20px auto; display: none; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); overflow: hidden; }
         .viewer.show { display: block; }
         .viewer-actions { text-align: right; padding: 10px; background: #f5f7fa; border-bottom: 1px solid #ddd; }
@@ -87,8 +89,25 @@
 </header>
 
 <div class="book-card">
-    <div class="book-image"><img id="cover" src="" alt="Sampul Buku" style="display:none;"><div id="noCover">📚</div><div class="book-actions"><a id="btnBaca" class="btn read">📖 Baca</a><a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a></div></div>
-    <div class="book-info"><h2 id="judul">Memuat...</h2><h4 id="penulis"></h4><p><strong>Penerbit:</strong> <span id="penerbit"></span></p><p><strong>Kota:</strong> <span id="kota"></span></p><p><strong>Tahun:</strong> <span id="tahun"></span></p><p><strong>ISBN:</strong> <span id="isbn"></span></p><p><strong>Kategori:</strong> <span id="kategori"></span></p><div class="book-actions"><button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button><button id="btnNext" class="btn nav">➡️ Selanjutnya</button></div></div>
+    <div class="book-image">
+        <img id="cover" src="" alt="Sampul Buku" style="display:none;">
+        <div id="noCover">📚</div>
+        <div class="book-actions">
+            <a id="btnBaca" class="btn read">📖 Baca</a>
+            <a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a>
+            <button id="btnShare" class="btn share-btn">🔗 Salin Tautan</button>
+        </div>
+    </div>
+    <div class="book-info">
+        <h2 id="judul">Memuat...</h2><h4 id="penulis"></h4>
+        <p><strong>Penerbit:</strong> <span id="penerbit"></span></p><p><strong>Kota:</strong> <span id="kota"></span></p>
+        <p><strong>Tahun:</strong> <span id="tahun"></span></p><p><strong>ISBN:</strong> <span id="isbn"></span></p>
+        <p><strong>Kategori:</strong> <span id="kategori"></span></p>
+        <div class="book-actions">
+            <button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button>
+            <button id="btnNext" class="btn nav">➡️ Selanjutnya</button>
+        </div>
+    </div>
 </div>
 
 <div id="mediaViewer" class="viewer">
@@ -106,12 +125,11 @@
 </footer>
 
 <script>
-    // ==================== KONFIGURASI GOOGLE FORM (GANTI DENGAN MILIK ANDA) ====================
+    // ==================== KONFIGURASI GOOGLE FORM ====================
     const FORM_ACTIVITY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSer60Wv1n-8UNTumz_k9KPY4NEI9pJGScDyijMvEPsZRGMgdg/formResponse";
     const ENTRY_NAMA = "entry.293670136";
     const ENTRY_AKTIVITAS = "entry.994210116";
     const ENTRY_JUDUL = "entry.498947527";
-    // ============================================================================================
 
     let currentUser = null;
     let dataRows = [];
@@ -131,14 +149,41 @@
         setTimeout(() => toast.style.opacity = "0", 2500);
     }
 
-    // ==================== LOG ACTIVITY DENGAN FORM SUBMIT (TARGET IFRAME) ====================
+    // ==================== UPDATE URL DAN TITLE ====================
+    function updateURLAndTitle(index) {
+        const newURL = new URL(window.location.href);
+        if (index > 1) {
+            newURL.searchParams.set('buku', index);
+        } else {
+            newURL.searchParams.delete('buku');
+        }
+        window.history.pushState({}, '', newURL);
+        // Update title halaman
+        const judulElem = document.getElementById("judul");
+        if (judulElem && judulElem.innerText !== "Memuat...") {
+            document.title = `${judulElem.innerText} - Perpus Tedunan`;
+        } else {
+            document.title = "Perpus Tedunan - Perpustakaan Digital";
+        }
+    }
+
+    // ==================== FUNGSI SHARE ====================
+    function shareCurrentBook() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            showToast("🔗 Tautan buku disalin ke clipboard!");
+        }).catch(() => {
+            alert("Gagal menyalin tautan. Silakan salin manual: " + url);
+        });
+    }
+
+    // ==================== LOG ACTIVITY ====================
     function logActivity(activity, judulBuku) {
         if (!currentUser) return;
         let tampilanNama = currentUser.nama;
         if (!currentUser.isAnggota && currentUser.status) tampilanNama = `${currentUser.nama} (${currentUser.status})`;
         else if (currentUser.isAnggota) tampilanNama = `${currentUser.nama} (Anggota)`;
         
-        // Buat form sementara dan submit ke iframe tersembunyi
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = FORM_ACTIVITY_URL;
@@ -158,11 +203,10 @@
         
         document.body.appendChild(form);
         form.submit();
-        // Hapus form setelah submit
         setTimeout(() => form.remove(), 1000);
         
         console.log(`[LOG] ${tampilanNama} - ${activity} - ${judulBuku}`);
-        showToast(`📝 ${activity} tercatat (cek sheet)`);
+        // Tidak menampilkan toast setiap kali agar tidak mengganggu
     }
 
     // ==================== LOGIN & PROFIL ====================
@@ -292,6 +336,7 @@
     function getEmbedUrl(u) { if (!u || u === "#") return null; let fid = null; let m1 = u.match(/drive\.google\.com\/file\/d\/([^\/]+)/); let m2 = u.match(/drive\.google\.com\/open\?id=([^&]+)/); if (m1) fid = m1[1]; if (m2) fid = m2[1]; return fid ? `https://drive.google.com/file/d/${fid}/preview` : u; }
     function getMediaType(u) { if (!u) return 'unknown'; let l = u.toLowerCase(); if (l.includes('drive.google.com')) return 'google_drive'; if (l.endsWith('.pdf')) return 'pdf'; if (l.endsWith('.mp4') || l.endsWith('.webm') || l.endsWith('.mov')) return 'video'; return 'pdf'; }
     function parseCSV(r) { let m = r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); if (!m) return []; return m.map(x => x.replace(/^"|"$/g, '').trim()); }
+    
     function tampilkanData(i) {
         if (!dataRows.length || i >= dataRows.length || i < 1) return;
         let c = parseCSV(dataRows[i]); if (c.length < 7) return;
@@ -299,6 +344,10 @@
         document.getElementById("penerbit").innerText = c[2] || "-"; document.getElementById("kota").innerText = c[3] || "-";
         document.getElementById("tahun").innerText = c[4] || "-"; document.getElementById("isbn").innerText = c[5] || "-";
         document.getElementById("kategori").innerText = c[8] || "-"; currentBookTitle = c[0] || "Unknown";
+        
+        // Update title dan URL setelah data ditampilkan
+        updateURLAndTitle(i);
+        
         let coverImg = document.getElementById("cover"), noCoverDiv = document.getElementById("noCover"), coverUrl = c[6] || "";
         if (coverUrl && coverUrl !== "") { coverImg.src = coverUrl; coverImg.style.display = "block"; noCoverDiv.style.display = "none"; coverImg.onerror = () => { coverImg.style.display = "none"; noCoverDiv.style.display = "flex"; }; }
         else { coverImg.style.display = "none"; noCoverDiv.style.display = "flex"; }
@@ -317,7 +366,16 @@
         pag.forEach(it => {
             let cols = parseCSV(dataRows[it.index]); let tr = document.createElement("tr");
             tr.innerHTML = `<td>${escapeHtml(it.judul)}</td><td>${escapeHtml(it.penulis)}</td><td>${cols[4] || "-"}</td>`;
-            tr.onclick = () => { currentIndex = it.index; tampilkanData(currentIndex); updateButtonState(); rd.style.display = "none"; searchInput.value = ""; document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth" }); };
+            tr.onclick = () => { 
+                currentIndex = it.index; 
+                tampilkanData(currentIndex); 
+                updateButtonState(); 
+                rd.style.display = "none"; 
+                searchInput.value = ""; 
+                document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth" });
+                // Log aktivitas klik pencarian sebagai "Lihat Detail" (opsional)
+                if (currentUser) logActivity("Lihat Detail", it.judul);
+            };
             tbody.appendChild(tr);
         });
         tbl.appendChild(tbody); rd.appendChild(tbl);
@@ -331,7 +389,11 @@
     function updateButtonState() { document.getElementById("btnPrev").disabled = (currentIndex <= 1); document.getElementById("btnNext").disabled = (currentIndex >= dataRows.length - 1); }
 
     function initReadButton() {
-        let btnBaca = document.getElementById("btnBaca"), btnUnduh = document.getElementById("btnUnduh"), viewer = document.getElementById("mediaViewer"), iframe = document.getElementById("pdfFrame"), vp = document.getElementById("videoPlayer"), vs = document.getElementById("videoSource"), closeBtn = document.getElementById("btnCloseViewer"), openTab = document.getElementById("btnOpenNewTab"), infoMsg = document.getElementById("infoMsg");
+        let btnBaca = document.getElementById("btnBaca"), btnUnduh = document.getElementById("btnUnduh"), btnShare = document.getElementById("btnShare");
+        let viewer = document.getElementById("mediaViewer"), iframe = document.getElementById("pdfFrame"), vp = document.getElementById("videoPlayer"), vs = document.getElementById("videoSource"), closeBtn = document.getElementById("btnCloseViewer"), openTab = document.getElementById("btnOpenNewTab"), infoMsg = document.getElementById("infoMsg");
+        
+        btnShare.onclick = () => shareCurrentBook();
+        
         function openMedia(rawUrl, isRead = true) {
             if (!rawUrl || rawUrl === "#") { alert("File belum tersedia."); return; }
             currentFileUrl = rawUrl; iframe.style.display = "none"; vp.style.display = "none"; vp.pause(); iframe.src = ""; vs.src = ""; vp.load(); infoMsg.innerHTML = "";
@@ -357,7 +419,17 @@
             let res = await fetch('buku.csv?t=' + Date.now()); if (!res.ok) throw new Error("buku.csv tidak ditemukan");
             let txt = await res.text(); dataRows = txt.trim().split(/\r?\n/);
             if (dataRows.length < 2) { document.getElementById("judul").innerText = "Data buku kosong"; return; }
-            currentIndex = 1; tampilkanData(currentIndex); updateButtonState();
+            
+            // Ambil parameter 'buku' dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let bukuId = parseInt(urlParams.get('buku'));
+            if (!isNaN(bukuId) && bukuId >= 1 && bukuId < dataRows.length) {
+                currentIndex = bukuId;
+            } else {
+                currentIndex = 1;
+            }
+            
+            tampilkanData(currentIndex); updateButtonState();
             document.getElementById("btnNext").onclick = () => { if (currentIndex < dataRows.length - 1) { currentIndex++; tampilkanData(currentIndex); updateButtonState(); } };
             document.getElementById("btnPrev").onclick = () => { if (currentIndex > 1) { currentIndex--; tampilkanData(currentIndex); updateButtonState(); } };
             initReadButton(); initGuestBook(); initStats(); initCategoryFilter();
