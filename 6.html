@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Perpus Tedunan - Perpustakaan Digital</title>
     <style>
-        /* ========== STYLE.CSS (lengkap) ========== */
+        /* ========== STYLE (sama seperti sebelumnya) ========== */
         * { box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -14,11 +14,7 @@
             padding: 20px;
             color: #333;
         }
-        button:disabled, .btn.nav:disabled {
-            background: #ddd !important;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        button:disabled, .btn.nav:disabled { background: #ddd !important; cursor: not-allowed; opacity: 0.6; }
         header {
             background: linear-gradient(135deg, #d5ec78, #5baf93);
             color: #5265f6;
@@ -305,7 +301,7 @@
     let currentIndex = 1;
     let currentBookTitle = "";
     let currentFileUrl = "";
-    let anggotaData = []; // array of { username, password, nama }
+    let anggotaData = [];
 
     const searchInput = document.getElementById("searchInput");
     let currentPage = 1;
@@ -396,11 +392,16 @@
                 <button id="backToMenu" class="btn nav">Kembali</button>
             </div>
         `;
-        document.getElementById("submitAnggota").onclick = async () => {
+        document.getElementById("submitAnggota").onclick = () => {
             const user = document.getElementById("loginUsername").value.trim();
             const pass = document.getElementById("loginPassword").value.trim();
             if (!user || !pass) { alert("Isi username dan password"); return; }
-            // Cari di anggotaData (sudah di-load)
+            // Debug: tampilkan jumlah anggota
+            console.log("Data anggota tersedia:", anggotaData);
+            if (anggotaData.length === 0) {
+                alert("Data anggota belum dimuat. Coba refresh halaman atau periksa file anggota.csv.");
+                return;
+            }
             const found = anggotaData.find(a => a.username === user && a.password === pass);
             if (found) {
                 currentUser = {
@@ -455,24 +456,29 @@
 
     function updateUserDisplay() {
         if (currentUser) {
-            let displayName = currentUser.isAnggota ? currentUser.nama : currentUser.nama;
+            let displayName = currentUser.nama;
             userNameSpan.innerHTML = `👤 ${displayName}`;
         } else {
             userNameSpan.innerHTML = "👤 Belum login";
         }
     }
 
-    // Load anggota.csv dengan pembersihan yang lebih baik
+    // Load anggota.csv dengan penanganan BOM dan pembersihan maksimal
     async function loadAnggota() {
         try {
-            const res = await fetch('anggota.csv');
-            if (!res.ok) throw new Error("anggota.csv tidak ditemukan");
-            const text = await res.text();
-            const lines = text.trim().split(/\r?\n/);
+            const response = await fetch('anggota.csv?t=' + Date.now()); // cache buster
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            let text = await response.text();
+            // Hapus BOM jika ada
+            if (text.charCodeAt(0) === 0xFEFF) {
+                text = text.slice(1);
+            }
+            const lines = text.split(/\r?\n/);
+            let dataLoaded = 0;
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (line === "") continue;
-                // Split dengan koma, tapi jangan pecah yang di dalam kutip jika ada (sederhana)
+                // Split dengan koma, tapi perhatikan jika ada kutip (sederhana)
                 let parts = line.split(',').map(s => s.replace(/^"|"$/g, '').trim());
                 if (parts.length >= 3) {
                     anggotaData.push({
@@ -480,11 +486,16 @@
                         password: parts[1],
                         nama: parts[2]
                     });
+                    dataLoaded++;
                 }
             }
-            console.log("Anggota loaded:", anggotaData); // untuk debugging
-        } catch(e) {
-            console.warn("Gagal baca anggota.csv, login anggota tidak tersedia", e);
+            console.log(`Berhasil memuat ${dataLoaded} data anggota. Contoh:`, anggotaData.slice(0,2));
+            if (dataLoaded === 0) {
+                console.warn("Tidak ada data anggota yang terbaca. Periksa format file.");
+            }
+        } catch (err) {
+            console.error("Gagal membaca anggota.csv:", err);
+            alert("Gagal memuat data anggota. File anggota.csv tidak ditemukan atau format salah. Silakan periksa.");
         }
     }
 
@@ -494,10 +505,11 @@
         if (stored) {
             try {
                 currentUser = JSON.parse(stored);
-                if (currentUser.isAnggota && !currentUser.username) throw new Error();
+                // validasi sederhana
+                if (currentUser.isAnggota && (!currentUser.username || !currentUser.nama)) throw new Error();
                 updateUserDisplay();
                 hideLogin();
-                showToast(`Selamat datang kembali, ${currentUser.isAnggota ? currentUser.nama : currentUser.nama}`);
+                showToast(`Selamat datang kembali, ${currentUser.nama}`);
             } catch(e) {
                 showLoginMenu();
                 showLogin();
@@ -523,7 +535,7 @@
         });
     }
 
-    // ==================== FUNGSI PERPUSTAKAAN ====================
+    // ==================== FUNGSI PERPUSTAKAAN (tidak berubah) ====================
     function getEmbedUrl(originalUrl) {
         if (!originalUrl || originalUrl === "#") return null;
         let url = originalUrl.trim();
@@ -741,7 +753,7 @@
 
     async function loadData() {
         try {
-            const res = await fetch('buku.csv');
+            const res = await fetch('buku.csv?t=' + Date.now());
             if (!res.ok) throw new Error("buku.csv tidak ditemukan");
             const text = await res.text();
             dataRows = text.trim().split(/\r?\n/);
