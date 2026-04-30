@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Perpus Tedunan - Perpustakaan Digital</title>
     <style>
-        /* ========== STYLE (sama seperti sebelumnya) ========== */
+        /* ========== STYLE (TIDAK BERUBAH) ========== */
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 20px; color: #333; }
         button:disabled, .btn.nav:disabled { background: #ddd !important; cursor: not-allowed; opacity: 0.6; }
@@ -125,12 +124,11 @@
 </footer>
 
 <script>
-    // ==================== KONFIGURASI GOOGLE FORM ====================
+    // ==================== KONFIGURASI GOOGLE FORM (TIDAK BERUBAH) ====================
     const FORM_ACTIVITY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSer60Wv1n-8UNTumz_k9KPY4NEI9pJGScDyijMvEPsZRGMgdg/formResponse";
     const ENTRY_NAMA = "entry.293670136";
     const ENTRY_AKTIVITAS = "entry.994210116";
     const ENTRY_JUDUL = "entry.498947527";
-
     let currentUser = null;
     let dataRows = [];
     let currentIndex = 1;
@@ -149,16 +147,17 @@
         setTimeout(() => toast.style.opacity = "0", 2500);
     }
 
-    // ==================== UPDATE URL DAN TITLE ====================
+    // ==================== UPDATE URL DAN TITLE MENGGUNAKAN HASH ====================
     function updateURLAndTitle(index) {
         const newURL = new URL(window.location.href);
         if (index > 1) {
-            newURL.searchParams.set('buku', index);
+            // Menggunakan hash fragment (#) bukan query parameter (?)
+            newURL.hash = `buku=${index}`;
         } else {
-            newURL.searchParams.delete('buku');
+            newURL.hash = '';
         }
         window.history.pushState({}, '', newURL);
-        // Update title halaman
+        
         const judulElem = document.getElementById("judul");
         if (judulElem && judulElem.innerText !== "Memuat...") {
             document.title = `${judulElem.innerText} - Perpus Tedunan`;
@@ -167,7 +166,7 @@
         }
     }
 
-    // ==================== FUNGSI SHARE ====================
+    // ==================== FUNGSI SHARE MEMPERBAIKI TAUTAN ====================
     function shareCurrentBook() {
         const url = window.location.href;
         navigator.clipboard.writeText(url).then(() => {
@@ -177,7 +176,7 @@
         });
     }
 
-    // ==================== LOG ACTIVITY ====================
+    // ==================== LOG ACTIVITY (TIDAK BERUBAH) ====================
     function logActivity(activity, judulBuku) {
         if (!currentUser) return;
         let tampilanNama = currentUser.nama;
@@ -206,10 +205,9 @@
         setTimeout(() => form.remove(), 1000);
         
         console.log(`[LOG] ${tampilanNama} - ${activity} - ${judulBuku}`);
-        // Tidak menampilkan toast setiap kali agar tidak mengganggu
     }
 
-    // ==================== LOGIN & PROFIL ====================
+    // ==================== LOGIN & PROFIL (TIDAK BERUBAH) ====================
     let loginOverlay = document.getElementById("loginOverlay");
     let profilOverlay = document.getElementById("profilOverlay");
     let userNameSpan = document.getElementById("userNameDisplay");
@@ -332,7 +330,7 @@
         loginOverlay.addEventListener("click", (e) => { if (e.target === loginOverlay) hideLogin(); });
     }
 
-    // ==================== FUNGSI PERPUSTAKAAN ====================
+    // ==================== FUNGSI PERPUSTAKAAN (DENGAN HASH ROUTING) ====================
     function getEmbedUrl(u) { if (!u || u === "#") return null; let fid = null; let m1 = u.match(/drive\.google\.com\/file\/d\/([^\/]+)/); let m2 = u.match(/drive\.google\.com\/open\?id=([^&]+)/); if (m1) fid = m1[1]; if (m2) fid = m2[1]; return fid ? `https://drive.google.com/file/d/${fid}/preview` : u; }
     function getMediaType(u) { if (!u) return 'unknown'; let l = u.toLowerCase(); if (l.includes('drive.google.com')) return 'google_drive'; if (l.endsWith('.pdf')) return 'pdf'; if (l.endsWith('.mp4') || l.endsWith('.webm') || l.endsWith('.mov')) return 'video'; return 'pdf'; }
     function parseCSV(r) { let m = r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); if (!m) return []; return m.map(x => x.replace(/^"|"$/g, '').trim()); }
@@ -345,7 +343,7 @@
         document.getElementById("tahun").innerText = c[4] || "-"; document.getElementById("isbn").innerText = c[5] || "-";
         document.getElementById("kategori").innerText = c[8] || "-"; currentBookTitle = c[0] || "Unknown";
         
-        // Update title dan URL setelah data ditampilkan
+        // Memanggil fungsi update URL setiap data berubah
         updateURLAndTitle(i);
         
         let coverImg = document.getElementById("cover"), noCoverDiv = document.getElementById("noCover"), coverUrl = c[6] || "";
@@ -361,7 +359,7 @@
         let rd = document.getElementById("searchResults"); rd.innerHTML = ""; currentMatches = matches;
         if (matches.length === 0) { rd.style.display = "block"; rd.innerHTML = "<p>📭 Tidak ada hasil</p>"; return; }
         rd.style.display = "block"; let start = (currentPage - 1) * rowsPerPage, end = start + rowsPerPage, pag = matches.slice(start, end);
-        let tbl = document.createElement("table"); tbl.innerHTML = "<thead><tr><th>Judul</th><th>Penulis</th><th>Tahun</th></tr></thead>";
+        let tbl = document.createElement("table"); tbl.innerHTML = "<thead><tr><th>Judul</th><th>Penulis</th><th>Tahun</th><tr></thead>";
         let tbody = document.createElement("tbody");
         pag.forEach(it => {
             let cols = parseCSV(dataRows[it.index]); let tr = document.createElement("tr");
@@ -373,7 +371,6 @@
                 rd.style.display = "none"; 
                 searchInput.value = ""; 
                 document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth" });
-                // Log aktivitas klik pencarian sebagai "Lihat Detail" (opsional)
                 if (currentUser) logActivity("Lihat Detail", it.judul);
             };
             tbody.appendChild(tr);
@@ -420,14 +417,16 @@
             let txt = await res.text(); dataRows = txt.trim().split(/\r?\n/);
             if (dataRows.length < 2) { document.getElementById("judul").innerText = "Data buku kosong"; return; }
             
-            // Ambil parameter 'buku' dari URL
-            const urlParams = new URLSearchParams(window.location.search);
-            let bukuId = parseInt(urlParams.get('buku'));
-            if (!isNaN(bukuId) && bukuId >= 1 && bukuId < dataRows.length) {
-                currentIndex = bukuId;
-            } else {
-                currentIndex = 1;
+            // MEMBACA ID BUKU DARI HASH URL (#buku=...)
+            let bukuId = 1;
+            const hash = window.location.hash.substring(1); // Menghapus karakter '#'
+            if (hash.startsWith('buku=')) {
+                let id = parseInt(hash.split('=')[1]);
+                if (!isNaN(id) && id >= 1 && id < dataRows.length) {
+                    bukuId = id;
+                }
             }
+            currentIndex = bukuId;
             
             tampilkanData(currentIndex); updateButtonState();
             document.getElementById("btnNext").onclick = () => { if (currentIndex < dataRows.length - 1) { currentIndex++; tampilkanData(currentIndex); updateButtonState(); } };
