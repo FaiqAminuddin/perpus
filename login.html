@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Anggota</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; }
+    .login-box {
+      width: 300px; margin: 100px auto; padding: 20px;
+      background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input { width: 100%; padding: 8px; margin: 8px 0; }
+    button { width: 100%; padding: 10px; background: #007bff; color: #fff; border: none; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login Anggota</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="message" class="error"></p>
+  </div>
+
+  <script>
+    async function loadCSV() {
+      const response = await fetch('anggota.csv'); // file CSV di repo GitHub
+      const text = await response.text();
+      const rows = text.trim().split('\n').map(r => r.split(','));
+      return rows; // array [ [username,password], ... ]
+    }
+
+    async function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const data = await loadCSV();
+
+      // Asumsikan baris pertama header, jadi mulai dari index 1
+      const found = data.slice(1).find(row => row[0] === user && row[1] === pass);
+
+      if (found) {
+        document.getElementById('message').style.color = 'green';
+        document.getElementById('message').textContent = 'Login berhasil!';
+        // bisa diarahkan ke halaman lain
+        // window.location.href = "dashboard.html";
+      } else {
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').textContent = 'Username atau password salah';
+      }
+    }
+  </script>
+</body>
+</html>
