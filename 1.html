@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Perpus Tedunan - Perpustakaan Digital</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="search-box">
+                <h1>📖</h1>
+        <h1>PERPUSTAKAAN DIGITAL</h1>
+        <h2>Tedunan Wedung Demak</h2>
+        <input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off">
+    </div>
+    <div id="searchResults" class="search-results"></div>
+    <div class="category-buttons">
+        <button class="cat-btn" data-cat="Referensi Umum">Referensi Umum</button>
+        <button class="cat-btn" data-cat="Filsafat dan psikologi">Filsafat & Psikologi</button>
+        <button class="cat-btn" data-cat="Agama">Agama</button>
+        <button class="cat-btn" data-cat="Ilmu sosial">Ilmu Sosial</button>
+        <button class="cat-btn" data-cat="Bahasa">Bahasa</button>
+        <button class="cat-btn" data-cat="Sains dan matematika">Sains & Matematika</button>
+        <button class="cat-btn" data-cat="Teknologi atau Ilmu terapan">Teknologi / Ilmu Terapan</button>
+        <button class="cat-btn" data-cat="Kesenian dan rekreasi">Kesenian & Rekreasi</button>
+        <button class="cat-btn" data-cat="Sastra">Sastra</button>
+        <button class="cat-btn" data-cat="Sejarah dan geografi">Sejarah & Geografi</button>
+    </div>
+</header>
+
+<div class="book-card">
+    <div class="book-image">
+        <img id="cover" src="" alt="Sampul Buku" style="display:none;">
+        <div id="noCover">📚</div>
+        <div class="book-actions">
+            <a id="btnBaca" class="btn read">📖 Baca</a>
+            <a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a>
+        </div>
+    </div>
+    <div class="book-info">
+        <h2 id="judul">Memuat...</h2>
+        <h4 id="penulis"></h4>
+        <p><strong>Penerbit:</strong> <span id="penerbit"></span></p>
+        <p><strong>Kota:</strong> <span id="kota"></span></p>
+        <p><strong>Tahun:</strong> <span id="tahun"></span></p>
+        <p><strong>ISBN:</strong> <span id="isbn"></span></p>
+        <p><strong>Kategori:</strong> <span id="kategori"></span></p>
+        <div class="book-actions">
+            <button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button>
+            <button id="btnNext" class="btn nav">➡️ Selanjutnya</button>
+        </div>
+    </div>
+</div>
+
+<!-- BLOK PDF VIEWER dengan iframe -->
+<div id="pdfViewer" class="viewer">
+    <div class="viewer-actions">
+        <button id="btnClosePdf" class="btn close">✖ Tutup PDF</button>
+    </div>
+    <iframe id="pdfFrame" src="" title="Pratinjau Buku" loading="lazy"></iframe>
+</div>
+
+<!-- BUKU TAMU dan Statistik -->
+<footer class="footer">
+    <button id="btnBukuTamu" class="btn guest">✍️ Silakan mengisi Buku Tamu</button>
+    <button id="btnStatistik" class="btn guest">📊 Statistik</button>
+
+    <!-- Viewer Buku Tamu -->
+    <div id="formViewer" class="viewer">
+        <div class="viewer-actions">
+            <button id="btnCloseForm" class="btn close">✖ Tutup Form</button>
+        </div>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd-VGoKrk3Hyn9VHav2KnN4BLO5ttCA20VjWQPlxSEllz5xbQ/viewform?embedded=true" width="100%" height="600px">Memuat Form Buku Tamu...</iframe>
+    </div>
+
+    <!-- Viewer Statistik -->
+    <div id="statsViewer" class="viewer">
+        <div class="viewer-actions">
+            <button id="btnCloseStats" class="btn close">✖ Tutup Statistik</button>
+        </div>
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQD_rDJXwTo8vJb1oFFuzSTnLA16jBnle2c97RkAjKmObAo6FHyE8nUs2PGRFQDLhjXtl-d4b1YgGBm/pubhtml?widget=true&amp;headers=false" width="100%" height="600px">Memuat Statistik...</iframe>
+    </div>
+</footer>
+
+
+<script>
+    (function(){
+        // ======================= GLOBAL =======================
+        let dataRows = [];          // seluruh baris CSV
+        let currentIndex = 1;       // index mulai dari 1 (0 adalah header)
+        const searchInput = document.getElementById("searchInput");
+        let currentPage = 1;
+        const rowsPerPage = 5;
+        let currentMatches = [];
+
+        // ========== FUNGSI KONVERSI URL GOOGLE DRIVE KE EMBED ==========
+        function getEmbedPdfUrl(originalUrl) {
+            if (!originalUrl || originalUrl === "#") return null;
+            let url = originalUrl.trim();
+            // Deteksi Google Drive (file/d/ atau open?id=)
+            let fileId = null;
+            const drivePattern1 = /drive\.google\.com\/file\/d\/([^\/]+)/;
+            const drivePattern2 = /drive\.google\.com\/open\?id=([^&]+)/;
+            const match1 = url.match(drivePattern1);
+            const match2 = url.match(drivePattern2);
+            if (match1) fileId = match1[1];
+            if (match2) fileId = match2[1];
+            
+            if (fileId) {
+                // Gunakan endpoint embed resmi tanpa notifikasi akses berlebihan (tetap butuh izin file public)
+                // Jika file private akan muncul permintaan akses, tapi itu di luar kendali kami.
+                // Namun format ini paling bersih untuk iframe.
+                return `https://drive.google.com/file/d/${fileId}/preview`;
+            }
+            
+            // Jika sudah berupa pdf biasa atau link raw, biarkan
+            if (url.toLowerCase().endsWith('.pdf') || url.includes('/preview')) {
+                return url;
+            }
+            // Cegah link aneh, fallback ke url asli (tetap dicoba)
+            return url;
+        }
+
+        // ========== PARSE CSV (handle kutip) ==========
+        function parseCSV(row) {
+            // regex sederhana untuk memisahkan kolom bertanda kutip
+            const matches = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+            if (!matches) return [];
+            return matches.map(item => item.replace(/^"|"$/g, '').trim());
+        }
+
+        // ========== TAMPILKAN DATA BUKU KE CARD ==========
+        function tampilkanData(index) {
+            if (!dataRows.length || index >= dataRows.length || index < 1) return;
+            const cols = parseCSV(dataRows[index]);
+            if (cols.length < 7) return;
+
+            document.getElementById("judul").innerText = cols[0] || "Judul tidak tersedia";
+            document.getElementById("penulis").innerText = cols[1] || "-";
+            document.getElementById("penerbit").innerText = cols[2] || "-";
+            document.getElementById("kota").innerText = cols[3] || "-";
+            document.getElementById("tahun").innerText = cols[4] || "-";
+            document.getElementById("isbn").innerText = cols[5] || "-";
+            document.getElementById("kategori").innerText = cols[8] || "-";
+
+            const coverImg = document.getElementById("cover");
+            const noCoverDiv = document.getElementById("noCover");
+            const coverUrl = cols[6] ? cols[6].trim() : "";
+            
+            if (coverUrl && coverUrl !== "") {
+                coverImg.src = coverUrl;
+                coverImg.style.display = "block";
+                noCoverDiv.style.display = "none";
+                coverImg.onerror = () => {
+                    // jika cover gagal load, tampilkan placeholder
+                    coverImg.style.display = "none";
+                    noCoverDiv.style.display = "flex";
+                };
+            } else {
+                coverImg.style.display = "none";
+                noCoverDiv.style.display = "flex";
+            }
+
+            // URL file buku (PDF)
+            let fileUrl = cols[7] ? cols[7].trim() : "#";
+            // Tombol Baca (tanpa arah langsung, pakai event)
+            const btnBaca = document.getElementById("btnBaca");
+            const btnUnduh = document.getElementById("btnUnduh");
+            
+            // Simpan data-url di atribut untuk tombol baca & unduh
+            btnBaca.setAttribute("data-fileurl", fileUrl);
+            btnUnduh.href = fileUrl;   // unduh buka tab baru (target _blank sudah ada)
+            // Jika fileUrl kosong, disable style
+            if (!fileUrl || fileUrl === "#") {
+                btnBaca.style.opacity = "0.6";
+                btnUnduh.style.opacity = "0.6";
+                btnBaca.style.pointerEvents = "none";
+                btnUnduh.style.pointerEvents = "none";
+            } else {
+                btnBaca.style.opacity = "1";
+                btnUnduh.style.opacity = "1";
+                btnBaca.style.pointerEvents = "auto";
+                btnUnduh.style.pointerEvents = "auto";
+            }
+        }
+
+        // ========== RENDER TABEL HASIL PENCARIAN DENGAN PAGINATION ==========
+        function renderTable(matches) {
+            const resultsDiv = document.getElementById("searchResults");
+            resultsDiv.innerHTML = "";
+            currentMatches = matches;
+
+            if (matches.length === 0) {
+                resultsDiv.style.display = "block";
+                resultsDiv.innerHTML = "<p style='padding:15px;'>📭 Tidak ada hasil yang cocok</p>";
+                return;
+            }
+
+            resultsDiv.style.display = "block";
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginated = matches.slice(start, end);
+
+            const table = document.createElement("table");
+            table.innerHTML = `<thead><tr><th>Judul Buku</th><th>Penulis</th><th>Tahun</th></tr></thead>`;
+            const tbody = document.createElement("tbody");
+
+            paginated.forEach(item => {
+                const cols = parseCSV(dataRows[item.index]);
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${escapeHtml(item.judul)}</td>
+                    <td>${escapeHtml(item.penulis)}</td>
+                    <td>${cols[4] || "-"}</td>
+                `;
+                row.addEventListener("click", (e) => {
+                    currentIndex = item.index;
+                    tampilkanData(currentIndex);
+                    updateButtonState();
+                    resultsDiv.style.display = "none";
+                    if (searchInput) searchInput.value = "";
+                    // scroll sedikit ke buku
+                    document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            resultsDiv.appendChild(table);
+
+            // Pagination controls
+            const paginationDiv = document.createElement("div");
+            paginationDiv.className = "pagination";
+            const prevBtn = document.createElement("button");
+            prevBtn.textContent = "⬅️ Sebelumnya";
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener("click", () => {
+                currentPage--;
+                renderTable(currentMatches);
+            });
+            const nextBtn = document.createElement("button");
+            nextBtn.textContent = "➡️ Berikutnya";
+            nextBtn.disabled = end >= matches.length;
+            nextBtn.addEventListener("click", () => {
+                currentPage++;
+                renderTable(currentMatches);
+            });
+            const pageInfo = document.createTextNode(` Halaman ${currentPage} `);
+            paginationDiv.appendChild(prevBtn);
+            paginationDiv.appendChild(pageInfo);
+            paginationDiv.appendChild(nextBtn);
+            resultsDiv.appendChild(paginationDiv);
+        }
+
+        function escapeHtml(str) {
+            if(!str) return "";
+            return str.replace(/[&<>]/g, function(m) {
+                if(m === '&') return '&amp;';
+                if(m === '<') return '&lt;';
+                if(m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // ========== UPDATE STATUS TOMBOL PREV/NEXT ==========
+        function updateButtonState() {
+            const btnPrev = document.getElementById("btnPrev");
+            const btnNext = document.getElementById("btnNext");
+            if (btnPrev) btnPrev.disabled = (currentIndex <= 1);
+            if (btnNext) btnNext.disabled = (currentIndex >= dataRows.length - 1);
+        }
+
+        // ========== EVENT TOMBOL BACA (tanpa notif akses & iframe halus) ==========
+        function initReadButton() {
+            const btnBaca = document.getElementById("btnBaca");
+            const pdfViewer = document.getElementById("pdfViewer");
+            const pdfFrame = document.getElementById("pdfFrame");
+            const closePdf = document.getElementById("btnClosePdf");
+
+            btnBaca.addEventListener("click", (e) => {
+                e.preventDefault();
+                const rawUrl = btnBaca.getAttribute("data-fileurl");
+                if (!rawUrl || rawUrl === "#") {
+                    alert("Maaf, file buku belum tersedia atau link tidak valid.");
+                    return;
+                }
+                // Ubah ke embed friendly (khusus Google Drive)
+                const embedUrl = getEmbedPdfUrl(rawUrl);
+                if (!embedUrl) {
+                    alert("Link buku tidak dapat diproses.");
+                    return;
+                }
+                // Set iframe src & tampilkan viewer
+                pdfFrame.src = embedUrl;
+                pdfViewer.classList.add("show");
+                // scroll halus ke viewer
+                pdfViewer.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+
+            closePdf.addEventListener("click", () => {
+                pdfViewer.classList.remove("show");
+                pdfFrame.src = ""; // bersihkan iframe
+            });
+        }
+
+        // ========== TOMBOL UNDUH OTOMATIS TAB BARU (sudah pakai target _blank) ==========
+       // Buku Tamu
+function initGuestBook() {
+    const btnTamu = document.getElementById("btnBukuTamu");
+    const formViewer = document.getElementById("formViewer");
+    const closeForm = document.getElementById("btnCloseForm");
+    if (btnTamu && formViewer) {
+        btnTamu.addEventListener("click", () => {
+            formViewer.classList.add("show");
+            formViewer.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        closeForm.addEventListener("click", () => {
+            formViewer.classList.remove("show");
+        });
+    }
+}
+
+// Statistik
+function initStats() {
+    const btnStats = document.getElementById("btnStatistik");
+    const statsViewer = document.getElementById("statsViewer");
+    const closeStats = document.getElementById("btnCloseStats");
+    if (btnStats && statsViewer) {
+        btnStats.addEventListener("click", () => {
+            statsViewer.classList.add("show");
+            statsViewer.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        closeStats.addEventListener("click", () => {
+            statsViewer.classList.remove("show");
+        });
+    }
+}
+
+// Panggil fungsi saat halaman siap
+document.addEventListener("DOMContentLoaded", () => {
+    initGuestBook();
+    initStats();
+});
+
+
+        // ========== FILTER KATEGORI (dengan pagination) ==========
+        function initCategoryFilter() {
+            document.querySelectorAll(".cat-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const kategoriTarget = btn.getAttribute("data-cat").toLowerCase();
+                    const resultsDiv = document.getElementById("searchResults");
+                    let matches = [];
+                    for (let i = 1; i < dataRows.length; i++) {
+                        const cols = parseCSV(dataRows[i]);
+                        const catBuku = (cols[8] || "").toLowerCase();
+                        if (catBuku.includes(kategoriTarget)) {
+                            matches.push({ index: i, judul: cols[0], penulis: cols[1] });
+                        }
+                    }
+                    if (matches.length > 0) {
+                        currentPage = 1;
+                        renderTable(matches);
+                    } else {
+                        resultsDiv.style.display = "block";
+                        resultsDiv.innerHTML = "<p>📌 Tidak ditemukan buku dalam kategori ini.</p>";
+                    }
+                    // sembunyikan card kalau perlu? tidak, biarkan buku terakhir tetap.
+                });
+            });
+        }
+
+        // ========== LOAD CSV DAN INISIALISASI ==========
+        fetch('buku.csv')
+            .then(res => {
+                if (!res.ok) throw new Error("CSV tidak ditemukan");
+                return res.text();
+            })
+            .then(text => {
+                dataRows = text.trim().split(/\r?\n/);
+                if (dataRows.length < 2) {
+                    console.warn("CSV hanya header atau kosong");
+                    document.getElementById("judul").innerText = "Data buku kosong";
+                    return;
+                }
+                currentIndex = 1;
+                tampilkanData(currentIndex);
+                updateButtonState();
+                
+                // event navigasi next/prev
+                const btnNext = document.getElementById("btnNext");
+                const btnPrev = document.getElementById("btnPrev");
+                btnNext.addEventListener("click", () => {
+                    if (currentIndex < dataRows.length - 1) {
+                        currentIndex++;
+                        tampilkanData(currentIndex);
+                        updateButtonState();
+                    }
+                });
+                btnPrev.addEventListener("click", () => {
+                    if (currentIndex > 1) {
+                        currentIndex--;
+                        tampilkanData(currentIndex);
+                        updateButtonState();
+                    }
+                });
+                
+                // inisialisasi fitur lainnya
+                initReadButton();
+                initGuestBook();
+                initCategoryFilter();
+                
+                // Pencarian realtime
+                searchInput.addEventListener("input", (e) => {
+                    const keyword = e.target.value.toLowerCase().trim();
+                    const resultsDiv = document.getElementById("searchResults");
+                    if (!keyword) {
+                        resultsDiv.style.display = "none";
+                        tampilkanData(currentIndex);
+                        updateButtonState();
+                        return;
+                    }
+                    let matches = [];
+                    for (let i = 1; i < dataRows.length; i++) {
+                        const cols = parseCSV(dataRows[i]);
+                        const judul = (cols[0] || "").toLowerCase();
+                        const penulis = (cols[1] || "").toLowerCase();
+                        if (judul.includes(keyword) || penulis.includes(keyword)) {
+                            matches.push({ index: i, judul: cols[0], penulis: cols[1] });
+                        }
+                    }
+                    if (matches.length) {
+                        currentPage = 1;
+                        renderTable(matches);
+                    } else {
+                        resultsDiv.style.display = "block";
+                        resultsDiv.innerHTML = "<p>🔍 Tidak ada buku yang cocok</p>";
+                    }
+                });
+            })
+            .catch(err => {
+                console.error("Gagal memuat CSV:", err);
+                document.getElementById("judul").innerText = "Gagal memuat data buku";
+                document.getElementById("penulis").innerText = "Periksa file buku.csv";
+            });
+    })();
+</script>
+</body>
+</html>
