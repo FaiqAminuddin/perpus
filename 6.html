@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Perpus Tedunan - Perpustakaan Digital</title>
     <style>
-        /* (sama seperti style sebelumnya, tidak berubah) */
+        /* ========== STYLE ========== */
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 20px; color: #333; }
         button:disabled, .btn.nav:disabled { background: #ddd !important; cursor: not-allowed; opacity: 0.6; }
@@ -62,19 +62,55 @@
     </style>
 </head>
 <body>
+
 <div id="loginOverlay" class="overlay"><div class="modal-card" id="loginModalCard"></div></div>
 <div id="profilOverlay" class="overlay"><div class="modal-card"><h2>👤 Profil Pengguna</h2><div id="profilContent"></div><button id="btnLogout" class="btn close" style="margin-top:15px;">🚪 Logout</button><button id="btnTutupProfil" class="btn nav">Tutup</button></div></div>
 <div id="toastMsg" class="toast"></div>
-<header><div class="search-box"><h1>📖 PERPUSTAKAAN DIGITAL</h1><h2>Tedunan Wedung Demak</h2><input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off"></div><div id="userNameDisplay" class="user-info">👤 Memuat...</div><div id="searchResults" class="search-results"></div><div class="category-buttons"><button class="cat-btn" data-cat="Referensi Umum">Referensi Umum</button><button class="cat-btn" data-cat="Filsafat dan psikologi">Filsafat & Psikologi</button><button class="cat-btn" data-cat="Agama">Agama</button><button class="cat-btn" data-cat="Ilmu sosial">Ilmu Sosial</button><button class="cat-btn" data-cat="Bahasa">Bahasa</button><button class="cat-btn" data-cat="Sains dan matematika">Sains & Matematika</button><button class="cat-btn" data-cat="Teknologi atau Ilmu terapan">Teknologi / Ilmu Terapan</button><button class="cat-btn" data-cat="Kesenian dan rekreasi">Kesenian & Rekreasi</button><button class="cat-btn" data-cat="Sastra">Sastra</button><button class="cat-btn" data-cat="Sejarah dan geografi">Sejarah & Geografi</button></div></header>
-<div class="book-card"><div class="book-image"><img id="cover" src="" alt="Sampul Buku" style="display:none;"><div id="noCover">📚</div><div class="book-actions"><a id="btnBaca" class="btn read">📖 Baca</a><a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a></div></div><div class="book-info"><h2 id="judul">Memuat...</h2><h4 id="penulis"></h4><p><strong>Penerbit:</strong> <span id="penerbit"></span></p><p><strong>Kota:</strong> <span id="kota"></span></p><p><strong>Tahun:</strong> <span id="tahun"></span></p><p><strong>ISBN:</strong> <span id="isbn"></span></p><p><strong>Kategori:</strong> <span id="kategori"></span></p><div class="book-actions"><button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button><button id="btnNext" class="btn nav">➡️ Selanjutnya</button></div></div></div>
-<div id="mediaViewer" class="viewer"><div class="viewer-actions"><button id="btnOpenNewTab" class="btn" style="background:#2196f3; color:white;">🔗 Buka di Tab Baru</button><button id="btnCloseViewer" class="btn close">✖ Tutup</button></div><iframe id="pdfFrame" src=""></iframe><video id="videoPlayer" controls style="display:none; width:100%; height:70vh;"><source id="videoSource" src=""></video><div id="infoMsg" style="padding:10px;text-align:center;"></div></div>
-<footer class="footer"><button id="btnBukuTamu" class="btn guest">✍️ Buku Tamu</button><button id="btnStatistik" class="btn guest">📊 Statistik</button><div id="formViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseForm" class="btn close">✖ Tutup</button></div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd-VGoKrk3Hyn9VHav2KnN4BLO5ttCA20VjWQPlxSEllz5xbQ/viewform?embedded=true" width="100%" height="600px"></iframe></div><div id="statsViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseStats" class="btn close">✖ Tutup</button></div><iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQD_rDJXwTo8vJb1oFFuzSTnLA16jBnle2c97RkAjKmObAo6FHyE8nUs2PGRFQDLhjXtl-d4b1YgGBm/pubhtml?widget=true&amp;headers=false" width="100%" height="600px"></iframe></div></footer>
+
+<header>
+    <div class="search-box"><h1>📖 PERPUSTAKAAN DIGITAL</h1><h2>Tedunan Wedung Demak</h2><input type="text" id="searchInput" placeholder="Cari judul atau penulis..." autocomplete="off"></div>
+    <div id="userNameDisplay" class="user-info">👤 Memuat...</div>
+    <div id="searchResults" class="search-results"></div>
+    <div class="category-buttons">
+        <button class="cat-btn" data-cat="Referensi Umum">Referensi Umum</button>
+        <button class="cat-btn" data-cat="Filsafat dan psikologi">Filsafat & Psikologi</button>
+        <button class="cat-btn" data-cat="Agama">Agama</button>
+        <button class="cat-btn" data-cat="Ilmu sosial">Ilmu Sosial</button>
+        <button class="cat-btn" data-cat="Bahasa">Bahasa</button>
+        <button class="cat-btn" data-cat="Sains dan matematika">Sains & Matematika</button>
+        <button class="cat-btn" data-cat="Teknologi atau Ilmu terapan">Teknologi / Ilmu Terapan</button>
+        <button class="cat-btn" data-cat="Kesenian dan rekreasi">Kesenian & Rekreasi</button>
+        <button class="cat-btn" data-cat="Sastra">Sastra</button>
+        <button class="cat-btn" data-cat="Sejarah dan geografi">Sejarah & Geografi</button>
+    </div>
+</header>
+
+<div class="book-card">
+    <div class="book-image"><img id="cover" src="" alt="Sampul Buku" style="display:none;"><div id="noCover">📚</div><div class="book-actions"><a id="btnBaca" class="btn read">📖 Baca</a><a id="btnUnduh" class="btn download" target="_blank" rel="noopener noreferrer">⬇️ Unduh</a></div></div>
+    <div class="book-info"><h2 id="judul">Memuat...</h2><h4 id="penulis"></h4><p><strong>Penerbit:</strong> <span id="penerbit"></span></p><p><strong>Kota:</strong> <span id="kota"></span></p><p><strong>Tahun:</strong> <span id="tahun"></span></p><p><strong>ISBN:</strong> <span id="isbn"></span></p><p><strong>Kategori:</strong> <span id="kategori"></span></p><div class="book-actions"><button id="btnPrev" class="btn nav">⬅️ Sebelumnya</button><button id="btnNext" class="btn nav">➡️ Selanjutnya</button></div></div>
+</div>
+
+<div id="mediaViewer" class="viewer">
+    <div class="viewer-actions"><button id="btnOpenNewTab" class="btn" style="background:#2196f3; color:white;">🔗 Buka di Tab Baru</button><button id="btnCloseViewer" class="btn close">✖ Tutup</button></div>
+    <iframe id="pdfFrame" src=""></iframe>
+    <video id="videoPlayer" controls style="display:none; width:100%; height:70vh;"><source id="videoSource" src=""></video>
+    <div id="infoMsg" style="padding:10px; text-align:center;"></div>
+</div>
+
+<footer class="footer">
+    <button id="btnBukuTamu" class="btn guest">✍️ Buku Tamu</button>
+    <button id="btnStatistik" class="btn guest">📊 Statistik</button>
+    <div id="formViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseForm" class="btn close">✖ Tutup</button></div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd-VGoKrk3Hyn9VHav2KnN4BLO5ttCA20VjWQPlxSEllz5xbQ/viewform?embedded=true" width="100%" height="600px"></iframe></div>
+    <div id="statsViewer" class="viewer"><div class="viewer-actions"><button id="btnCloseStats" class="btn close">✖ Tutup</button></div><iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQD_rDJXwTo8vJb1oFFuzSTnLA16jBnle2c97RkAjKmObAo6FHyE8nUs2PGRFQDLhjXtl-d4b1YgGBm/pubhtml?widget=true&amp;headers=false" width="100%" height="600px"></iframe></div>
+</footer>
+
 <script>
-    // Konfigurasi Google Form (aktivitas)
+    // Konfigurasi Google Form untuk aktivitas
     const FORM_ACTIVITY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSer60Wv1n-8UNTumz_k9KPY4NEI9pJGScDyijMvEPsZRGMgdg/formResponse";
     const ENTRY_NAMA = "entry.293670136";
     const ENTRY_AKTIVITAS = "entry.994210116";
     const ENTRY_JUDUL = "entry.498947527";
+
     let currentUser = null;
     let dataRows = [];
     let currentIndex = 1;
@@ -86,175 +122,235 @@
     const rowsPerPage = 5;
     let currentMatches = [];
 
-    function showToast(msg) { const t=document.getElementById("toastMsg"); t.innerText=msg; t.style.opacity="1"; setTimeout(()=>t.style.opacity="0",2500); }
+    function showToast(msg) {
+        const toast = document.getElementById("toastMsg");
+        toast.innerText = msg;
+        toast.style.opacity = "1";
+        setTimeout(() => toast.style.opacity = "0", 2500);
+    }
+
     function logActivity(activity, judulBuku) {
-        if(!currentUser) return;
+        if (!currentUser) return;
         let tampilanNama = currentUser.nama;
-        if(!currentUser.isAnggota && currentUser.status) tampilanNama = `${currentUser.nama} (${currentUser.status})`;
-        else if(currentUser.isAnggota) tampilanNama = `${currentUser.nama} (Anggota)`;
+        if (!currentUser.isAnggota && currentUser.status) tampilanNama = `${currentUser.nama} (${currentUser.status})`;
+        else if (currentUser.isAnggota) tampilanNama = `${currentUser.nama} (Anggota)`;
         const fd = new URLSearchParams();
         fd.append(ENTRY_NAMA, tampilanNama);
         fd.append(ENTRY_AKTIVITAS, activity);
         fd.append(ENTRY_JUDUL, judulBuku);
-        fetch(FORM_ACTIVITY_URL, { method:"POST", mode:"no-cors", body:fd.toString() }).catch(e=>console.warn(e));
+        fetch(FORM_ACTIVITY_URL, { method: "POST", mode: "no-cors", body: fd.toString() }).catch(e => console.warn(e));
     }
-    // Login & profil
+
+    // ==================== LOGIN & PROFIL ====================
     let loginOverlay = document.getElementById("loginOverlay");
     let profilOverlay = document.getElementById("profilOverlay");
     let userNameSpan = document.getElementById("userNameDisplay");
+
     function hideLogin() { loginOverlay.classList.remove("show"); }
     function showLogin() { loginOverlay.classList.add("show"); }
     function hideProfil() { profilOverlay.classList.remove("show"); }
     function showProfil() {
-        if(!currentUser) return;
-        let c = currentUser.isAnggota ? `<p><strong>Username:</strong> ${currentUser.username}</p><p><strong>Nama:</strong> ${currentUser.nama}</p><p><strong>Status:</strong> Anggota</p>` : `<p><strong>Nama:</strong> ${currentUser.nama}</p><p><strong>Status:</strong> ${currentUser.status}</p><p><strong>Peran:</strong> Tamu</p>`;
-        document.getElementById("profilContent").innerHTML = c;
+        if (!currentUser) return;
+        let content = currentUser.isAnggota 
+            ? `<p><strong>Username:</strong> ${currentUser.username}</p><p><strong>Nama:</strong> ${currentUser.nama}</p><p><strong>Status:</strong> Anggota</p>`
+            : `<p><strong>Nama:</strong> ${currentUser.nama}</p><p><strong>Status:</strong> ${currentUser.status}</p><p><strong>Peran:</strong> Tamu</p>`;
+        document.getElementById("profilContent").innerHTML = content;
         profilOverlay.classList.add("show");
     }
-    function logout() { currentUser=null; localStorage.removeItem("perpustakaan_user"); userNameSpan.innerText="👤 Belum login"; showLogin(); showToast("Anda telah logout"); }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem("perpustakaan_user");
+        userNameSpan.innerText = "👤 Belum login";
+        showLogin();
+        showToast("Anda telah logout");
+    }
+
     function showLoginMenu() {
         const modalCard = document.getElementById("loginModalCard");
         modalCard.innerHTML = `<h3>📚 Selamat Datang</h3><p>Silakan pilih metode masuk</p><div class="btn-group"><button id="choiceAnggota" class="btn read">Anggota</button><button id="choiceTamu" class="btn guest">Tamu</button></div>`;
         document.getElementById("choiceAnggota").onclick = () => showFormAnggota();
         document.getElementById("choiceTamu").onclick = () => showFormTamu();
     }
+
     async function loadAnggota() {
         try {
-            const res = await fetch('anggota.csv?t='+Date.now());
-            if(!res.ok) throw new Error("File tidak ditemukan");
+            const res = await fetch('anggota.csv?t=' + Date.now());
+            if (!res.ok) throw new Error("File tidak ditemukan");
             let text = await res.text();
-            if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
-            console.log("RAW CSV anggota:\n", text);
+            if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
             const lines = text.split(/\r?\n/);
-            for(let line of lines) {
-                line=line.trim();
-                if(line==="") continue;
-                let parts = line.split(',').map(s=>s.replace(/^"|"$/g,'').trim());
-                if(parts.length>=3) anggotaData.push({ username: parts[0], password: parts[1], nama: parts[2] });
+            for (let line of lines) {
+                line = line.trim();
+                if (line === "") continue;
+                let parts = line.split(',').map(s => s.replace(/^"|"$/g, '').trim());
+                if (parts.length >= 3) anggotaData.push({ username: parts[0], password: parts[1], nama: parts[2] });
             }
-            console.log("Data anggota loaded:", anggotaData);
-            if(anggotaData.length===0) alert("Peringatan: Tidak ada data anggota terbaca. Periksa format file.");
-            else alert(`✅ Memuat ${anggotaData.length} data anggota. Contoh: ${anggotaData[0].username}`);
-        } catch(e) { console.error(e); alert("Gagal baca anggota.csv: "+e.message); }
+            if (anggotaData.length === 0) showToast("Peringatan: Tidak ada data anggota terbaca");
+        } catch (e) {
+            console.warn(e);
+            showToast("Gagal memuat data anggota, login anggota tidak tersedia");
+        }
     }
+
     function showFormAnggota() {
         const modalCard = document.getElementById("loginModalCard");
         modalCard.innerHTML = `<h3>🔐 Login Anggota</h3><input type="text" id="loginUsername" placeholder="Username"><input type="password" id="loginPassword" placeholder="Password"><div class="btn-group"><button id="submitAnggota" class="btn read">Masuk</button><button id="backToMenu" class="btn nav">Kembali</button></div><div id="debugInfo" style="font-size:12px; margin-top:10px; color:gray;"></div>`;
         const debugDiv = document.getElementById("debugInfo");
-        debugDiv.innerHTML = anggotaData.length ? `📋 Data anggota: ${anggotaData.length} akun. Contoh username: ${anggotaData[0].username}` : "⚠️ Belum ada data anggota.";
+        debugDiv.innerHTML = anggotaData.length ? `📋 ${anggotaData.length} akun anggota tersedia` : "⚠️ Belum ada data anggota.";
         document.getElementById("submitAnggota").onclick = () => {
             const user = document.getElementById("loginUsername").value.trim();
             const pass = document.getElementById("loginPassword").value.trim();
-            if(!user||!pass) { alert("Isi semua field"); return; }
-            console.log("Login attempt:", user, pass);
+            if (!user || !pass) { alert("Isi username dan password"); return; }
             const found = anggotaData.find(a => a.username === user && a.password === pass);
-            if(found) {
+            if (found) {
                 currentUser = { username: found.username, nama: found.nama, isAnggota: true };
                 localStorage.setItem("perpustakaan_user", JSON.stringify(currentUser));
-                hideLogin(); updateUserDisplay(); logActivity("Login","-");
+                hideLogin();
+                updateUserDisplay();
+                logActivity("Login", "-");
                 showToast(`Selamat datang, Anggota ${found.nama}`);
             } else {
                 const userExists = anggotaData.some(a => a.username === user);
-                if(userExists) alert("Password salah.");
+                if (userExists) alert("Password salah.");
                 else alert(`Username "${user}" tidak ditemukan.`);
             }
         };
         document.getElementById("backToMenu").onclick = showLoginMenu;
     }
+
     function showFormTamu() {
         const modalCard = document.getElementById("loginModalCard");
         modalCard.innerHTML = `<h3>👥 Login Tamu</h3><input type="text" id="tamuNama" placeholder="Nama Anda"><select id="tamuStatus"><option value="Pelajar">Pelajar</option><option value="Guru">Guru</option><option value="Masyarakat Umum">Masyarakat Umum</option></select><div class="btn-group"><button id="submitTamu" class="btn guest">Masuk sebagai Tamu</button><button id="backToMenu2" class="btn nav">Kembali</button></div>`;
         document.getElementById("submitTamu").onclick = () => {
             const nama = document.getElementById("tamuNama").value.trim();
             const status = document.getElementById("tamuStatus").value;
-            if(!nama) { alert("Masukkan nama"); return; }
+            if (!nama) { alert("Masukkan nama"); return; }
             currentUser = { nama: nama, status: status, isAnggota: false };
             localStorage.setItem("perpustakaan_user", JSON.stringify(currentUser));
-            hideLogin(); updateUserDisplay(); logActivity("Login","-");
+            hideLogin();
+            updateUserDisplay();
+            logActivity("Login", "-");
             showToast(`Halo ${nama} (${status}), selamat membaca!`);
         };
         document.getElementById("backToMenu2").onclick = showLoginMenu;
     }
-    function updateUserDisplay() { userNameSpan.innerHTML = currentUser ? `👤 ${currentUser.nama}` : "👤 Belum login"; }
+
+    function updateUserDisplay() {
+        userNameSpan.innerHTML = currentUser ? `👤 ${currentUser.nama}` : "👤 Belum login";
+    }
+
     async function initLogin() {
         await loadAnggota();
         const stored = localStorage.getItem("perpustakaan_user");
-        if(stored) {
-            try { currentUser = JSON.parse(stored); updateUserDisplay(); hideLogin(); showToast(`Selamat datang kembali, ${currentUser.nama}`); } 
-            catch(e) { showLoginMenu(); showLogin(); }
-        } else { showLoginMenu(); showLogin(); }
-        userNameSpan.onclick = () => { if(currentUser) showProfil(); else showLogin(); };
+        if (stored) {
+            try {
+                currentUser = JSON.parse(stored);
+                updateUserDisplay();
+                hideLogin();
+                showToast(`Selamat datang kembali, ${currentUser.nama}`);
+            } catch (e) {
+                showLoginMenu();
+                showLogin();
+            }
+        } else {
+            showLoginMenu();
+            showLogin();
+        }
+        userNameSpan.onclick = () => currentUser ? showProfil() : showLogin();
         document.getElementById("btnLogout").onclick = () => { logout(); hideProfil(); };
         document.getElementById("btnTutupProfil").onclick = () => hideProfil();
-        profilOverlay.addEventListener("click", (e) => { if(e.target===profilOverlay) hideProfil(); });
-        loginOverlay.addEventListener("click", (e) => { if(e.target===loginOverlay) hideLogin(); });
+        profilOverlay.addEventListener("click", (e) => { if (e.target === profilOverlay) hideProfil(); });
+        loginOverlay.addEventListener("click", (e) => { if (e.target === loginOverlay) hideLogin(); });
     }
-    // Fungsi perpustakaan (tidak diubah banyak)
-    function getEmbedUrl(u){ if(!u||u==="#") return null; let fid=null; let m1=u.match(/drive\.google\.com\/file\/d\/([^\/]+)/); let m2=u.match(/drive\.google\.com\/open\?id=([^&]+)/); if(m1) fid=m1[1]; if(m2) fid=m2[1]; return fid?`https://drive.google.com/file/d/${fid}/preview`:u; }
-    function getMediaType(u){ if(!u) return 'unknown'; let l=u.toLowerCase(); if(l.includes('drive.google.com')) return 'google_drive'; if(l.endsWith('.pdf')) return 'pdf'; if(l.endsWith('.mp4')||l.endsWith('.webm')||l.endsWith('.mov')) return 'video'; return 'pdf'; }
-    function parseCSV(r){ let m=r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); if(!m) return []; return m.map(x=>x.replace(/^"|"$/g,'').trim()); }
-    function tampilkanData(i){
-        if(!dataRows.length||i>=dataRows.length||i<1) return;
-        let c=parseCSV(dataRows[i]); if(c.length<7) return;
-        document.getElementById("judul").innerText=c[0]||"-"; document.getElementById("penulis").innerText=c[1]||"-";
-        document.getElementById("penerbit").innerText=c[2]||"-"; document.getElementById("kota").innerText=c[3]||"-";
-        document.getElementById("tahun").innerText=c[4]||"-"; document.getElementById("isbn").innerText=c[5]||"-";
-        document.getElementById("kategori").innerText=c[8]||"-"; currentBookTitle=c[0]||"Unknown";
-        let cv=document.getElementById("cover"), nc=document.getElementById("noCover"), cu=c[6]||"";
-        if(cu&&cu!==""){ cv.src=cu; cv.style.display="block"; nc.style.display="none"; cv.onerror=()=>{ cv.style.display="none"; nc.style.display="flex"; };}
-        else{ cv.style.display="none"; nc.style.display="flex"; }
-        let fu=c[7]||"#", bb=document.getElementById("btnBaca"), bu=document.getElementById("btnUnduh");
-        bb.setAttribute("data-fileurl",fu); bu.href=fu;
-        if(fu==="#"||!fu){ bb.style.opacity="0.6"; bu.style.opacity="0.6"; bb.style.pointerEvents="none"; bu.style.pointerEvents="none"; }
-        else{ bb.style.opacity="1"; bu.style.opacity="1"; bb.style.pointerEvents="auto"; bu.style.pointerEvents="auto"; }
+
+    // ==================== FUNGSI PERPUSTAKAAN ====================
+    function getEmbedUrl(u) { if (!u || u === "#") return null; let fid = null; let m1 = u.match(/drive\.google\.com\/file\/d\/([^\/]+)/); let m2 = u.match(/drive\.google\.com\/open\?id=([^&]+)/); if (m1) fid = m1[1]; if (m2) fid = m2[1]; return fid ? `https://drive.google.com/file/d/${fid}/preview` : u; }
+    function getMediaType(u) { if (!u) return 'unknown'; let l = u.toLowerCase(); if (l.includes('drive.google.com')) return 'google_drive'; if (l.endsWith('.pdf')) return 'pdf'; if (l.endsWith('.mp4') || l.endsWith('.webm') || l.endsWith('.mov')) return 'video'; return 'pdf'; }
+    function parseCSV(r) { let m = r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); if (!m) return []; return m.map(x => x.replace(/^"|"$/g, '').trim()); }
+    function tampilkanData(i) {
+        if (!dataRows.length || i >= dataRows.length || i < 1) return;
+        let c = parseCSV(dataRows[i]); if (c.length < 7) return;
+        document.getElementById("judul").innerText = c[0] || "-"; document.getElementById("penulis").innerText = c[1] || "-";
+        document.getElementById("penerbit").innerText = c[2] || "-"; document.getElementById("kota").innerText = c[3] || "-";
+        document.getElementById("tahun").innerText = c[4] || "-"; document.getElementById("isbn").innerText = c[5] || "-";
+        document.getElementById("kategori").innerText = c[8] || "-"; currentBookTitle = c[0] || "Unknown";
+        let coverImg = document.getElementById("cover"), noCoverDiv = document.getElementById("noCover"), coverUrl = c[6] || "";
+        if (coverUrl && coverUrl !== "") { coverImg.src = coverUrl; coverImg.style.display = "block"; noCoverDiv.style.display = "none"; coverImg.onerror = () => { coverImg.style.display = "none"; noCoverDiv.style.display = "flex"; }; }
+        else { coverImg.style.display = "none"; noCoverDiv.style.display = "flex"; }
+        let fileUrl = c[7] || "#", btnBaca = document.getElementById("btnBaca"), btnUnduh = document.getElementById("btnUnduh");
+        btnBaca.setAttribute("data-fileurl", fileUrl); btnUnduh.href = fileUrl;
+        if (!fileUrl || fileUrl === "#") { btnBaca.style.opacity = "0.6"; btnUnduh.style.opacity = "0.6"; btnBaca.style.pointerEvents = "none"; btnUnduh.style.pointerEvents = "none"; }
+        else { btnBaca.style.opacity = "1"; btnUnduh.style.opacity = "1"; btnBaca.style.pointerEvents = "auto"; btnUnduh.style.pointerEvents = "auto"; }
     }
-    function renderTable(matches){
-        let rd=document.getElementById("searchResults"); rd.innerHTML=""; currentMatches=matches;
-        if(matches.length===0){ rd.style.display="block"; rd.innerHTML="<p>📭 Tidak ada hasil</p>"; return; }
-        rd.style.display="block"; let start=(currentPage-1)*rowsPerPage, end=start+rowsPerPage, pag=matches.slice(start,end);
-        let tbl=document.createElement("table"); tbl.innerHTML="<thead><tr><th>Judul</th><th>Penulis</th><th>Tahun</th></tr></thead>"; let tb=document.createElement("tbody");
-        pag.forEach(it=>{ let cols=parseCSV(dataRows[it.index]); let tr=document.createElement("tr"); tr.innerHTML=`<td>${escapeHtml(it.judul)}</td><td>${escapeHtml(it.penulis)}</td><td>${cols[4]||"-"}</td>`; tr.onclick=()=>{ currentIndex=it.index; tampilkanData(currentIndex); updateButtonState(); rd.style.display="none"; searchInput.value=""; document.querySelector(".book-card")?.scrollIntoView({behavior:"smooth"}); }; tb.appendChild(tr); });
-        tbl.appendChild(tb); rd.appendChild(tbl);
-        let pd=document.createElement("div"); pd.className="pagination";
-        let pb=document.createElement("button"); pb.textContent="⬅️ Sebelumnya"; pb.disabled=currentPage===1; pb.onclick=()=>{ currentPage--; renderTable(currentMatches); };
-        let nb=document.createElement("button"); nb.textContent="➡️ Berikutnya"; nb.disabled=end>=matches.length; nb.onclick=()=>{ currentPage++; renderTable(currentMatches); };
+
+    function renderTable(matches) {
+        let rd = document.getElementById("searchResults"); rd.innerHTML = ""; currentMatches = matches;
+        if (matches.length === 0) { rd.style.display = "block"; rd.innerHTML = "<p>📭 Tidak ada hasil</p>"; return; }
+        rd.style.display = "block"; let start = (currentPage - 1) * rowsPerPage, end = start + rowsPerPage, pag = matches.slice(start, end);
+        let tbl = document.createElement("table"); tbl.innerHTML = "<thead><tr><th>Judul</th><th>Penulis</th><th>Tahun</th></tr></thead>";
+        let tbody = document.createElement("tbody");
+        pag.forEach(it => {
+            let cols = parseCSV(dataRows[it.index]); let tr = document.createElement("tr");
+            tr.innerHTML = `<td>${escapeHtml(it.judul)}</td><td>${escapeHtml(it.penulis)}</td><td>${cols[4] || "-"}</td>`;
+            tr.onclick = () => { currentIndex = it.index; tampilkanData(currentIndex); updateButtonState(); rd.style.display = "none"; searchInput.value = ""; document.querySelector(".book-card")?.scrollIntoView({ behavior: "smooth" }); };
+            tbody.appendChild(tr);
+        });
+        tbl.appendChild(tbody); rd.appendChild(tbl);
+        let pd = document.createElement("div"); pd.className = "pagination";
+        let pb = document.createElement("button"); pb.textContent = "⬅️ Sebelumnya"; pb.disabled = currentPage === 1; pb.onclick = () => { currentPage--; renderTable(currentMatches); };
+        let nb = document.createElement("button"); nb.textContent = "➡️ Berikutnya"; nb.disabled = end >= matches.length; nb.onclick = () => { currentPage++; renderTable(currentMatches); };
         pd.appendChild(pb); pd.appendChild(document.createTextNode(` Halaman ${currentPage} `)); pd.appendChild(nb); rd.appendChild(pd);
     }
-    function escapeHtml(s){ if(!s) return ""; return s.replace(/[&<>]/g, m=> m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
-    function updateButtonState(){ document.getElementById("btnPrev").disabled=(currentIndex<=1); document.getElementById("btnNext").disabled=(currentIndex>=dataRows.length-1); }
-    function initReadButton(){
-        let bb=document.getElementById("btnBaca"), bu=document.getElementById("btnUnduh"), v=document.getElementById("mediaViewer"), ifr=document.getElementById("pdfFrame"), vp=document.getElementById("videoPlayer"), vs=document.getElementById("videoSource"), cl=document.getElementById("btnCloseViewer"), ot=document.getElementById("btnOpenNewTab"), im=document.getElementById("infoMsg");
-        function openMedia(url,isRead=true){
-            if(!url||url==="#"){ alert("File belum tersedia."); return; }
-            currentFileUrl=url; ifr.style.display="none"; vp.style.display="none"; vp.pause(); ifr.src=""; vs.src=""; vp.load(); im.innerHTML="";
-            let type=getMediaType(url), fu=url;
-            if(type==='google_drive'){ fu=getEmbedUrl(url); if(fu){ ifr.src=fu; ifr.style.display="block"; im.innerHTML="⚠️ Jika tidak muncul, coba 'Buka di Tab Baru'."; } else alert("Gagal memproses link Google Drive."); }
-            else if(type==='video'){ vs.src=fu; vp.load(); vp.style.display="block"; vp.onerror=()=>im.innerHTML="❌ Video gagal diputar."; }
-            else{ const encoded=encodeURIComponent(fu); ifr.src=`https://docs.google.com/viewer?url=${encoded}&embedded=true`; ifr.style.display="block"; im.innerHTML="📄 Menampilkan PDF via Google Docs Viewer."; }
-            v.classList.add("show"); v.scrollIntoView({behavior:"smooth"});
-            if(isRead&&currentUser) logActivity("Baca",currentBookTitle);
+
+    function escapeHtml(s) { if (!s) return ""; return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+    function updateButtonState() { document.getElementById("btnPrev").disabled = (currentIndex <= 1); document.getElementById("btnNext").disabled = (currentIndex >= dataRows.length - 1); }
+
+    function initReadButton() {
+        let btnBaca = document.getElementById("btnBaca"), btnUnduh = document.getElementById("btnUnduh"), viewer = document.getElementById("mediaViewer"), iframe = document.getElementById("pdfFrame"), vp = document.getElementById("videoPlayer"), vs = document.getElementById("videoSource"), closeBtn = document.getElementById("btnCloseViewer"), openTab = document.getElementById("btnOpenNewTab"), infoMsg = document.getElementById("infoMsg");
+        function openMedia(rawUrl, isRead = true) {
+            if (!rawUrl || rawUrl === "#") { alert("File belum tersedia."); return; }
+            currentFileUrl = rawUrl; iframe.style.display = "none"; vp.style.display = "none"; vp.pause(); iframe.src = ""; vs.src = ""; vp.load(); infoMsg.innerHTML = "";
+            let mediaType = getMediaType(rawUrl), finalUrl = rawUrl;
+            if (mediaType === 'google_drive') { finalUrl = getEmbedUrl(rawUrl); if (finalUrl) { iframe.src = finalUrl; iframe.style.display = "block"; infoMsg.innerHTML = "⚠️ Jika tidak muncul, coba 'Buka di Tab Baru'."; } else alert("Gagal memproses link Google Drive."); }
+            else if (mediaType === 'video') { vs.src = finalUrl; vp.load(); vp.style.display = "block"; vp.onerror = () => infoMsg.innerHTML = "❌ Video gagal diputar. Buka di Tab Baru."; }
+            else { const encoded = encodeURIComponent(finalUrl); iframe.src = `https://docs.google.com/viewer?url=${encoded}&embedded=true`; iframe.style.display = "block"; infoMsg.innerHTML = "📄 Menampilkan PDF via Google Docs Viewer."; }
+            viewer.classList.add("show"); viewer.scrollIntoView({ behavior: "smooth" });
+            if (isRead && currentUser) logActivity("Baca", currentBookTitle);
         }
-        bb.onclick=(e)=>{ e.preventDefault(); openMedia(bb.getAttribute("data-fileurl"),true); };
-        bu.onclick=()=>{ if(currentUser&&bu.href!=="#") logActivity("Unduh",currentBookTitle); };
-        cl.onclick=()=>{ v.classList.remove("show"); ifr.src=""; vp.pause(); vs.src=""; };
-        ot.onclick=()=>{ if(currentFileUrl) window.open(currentFileUrl,'_blank'); };
+        btnBaca.onclick = (e) => { e.preventDefault(); openMedia(btnBaca.getAttribute("data-fileurl"), true); };
+        btnUnduh.onclick = () => { if (currentUser && btnUnduh.href !== "#") logActivity("Unduh", currentBookTitle); };
+        closeBtn.onclick = () => { viewer.classList.remove("show"); iframe.src = ""; vp.pause(); vs.src = ""; };
+        openTab.onclick = () => { if (currentFileUrl) window.open(currentFileUrl, '_blank'); };
     }
-    function initGuestBook(){ let b=document.getElementById("btnBukuTamu"), v=document.getElementById("formViewer"), c=document.getElementById("btnCloseForm"); b.onclick=()=>v.classList.add("show"); c.onclick=()=>v.classList.remove("show"); }
-    function initStats(){ let b=document.getElementById("btnStatistik"), v=document.getElementById("statsViewer"), c=document.getElementById("btnCloseStats"); b.onclick=()=>v.classList.add("show"); c.onclick=()=>v.classList.remove("show"); }
-    function initCategoryFilter(){ document.querySelectorAll(".cat-btn").forEach(btn=>{ btn.onclick=()=>{ let target=btn.getAttribute("data-cat").toLowerCase(), matches=[]; for(let i=1;i<dataRows.length;i++){ let cols=parseCSV(dataRows[i]); let cat=(cols[8]||"").toLowerCase(); if(cat.includes(target)) matches.push({index:i, judul:cols[0], penulis:cols[1]}); } let rd=document.getElementById("searchResults"); if(matches.length){ currentPage=1; renderTable(matches); } else{ rd.style.display="block"; rd.innerHTML="<p>📌 Tidak ditemukan kategori.</p>"; } }; }); }
-    async function loadData(){
-        try{
-            let r=await fetch('buku.csv?t='+Date.now()); if(!r.ok) throw new Error("buku.csv tidak ditemukan");
-            let txt=await r.text(); dataRows=txt.trim().split(/\r?\n/);
-            if(dataRows.length<2){ document.getElementById("judul").innerText="Data buku kosong"; return; }
-            currentIndex=1; tampilkanData(currentIndex); updateButtonState();
-            document.getElementById("btnNext").onclick=()=>{ if(currentIndex<dataRows.length-1){ currentIndex++; tampilkanData(currentIndex); updateButtonState(); } };
-            document.getElementById("btnPrev").onclick=()=>{ if(currentIndex>1){ currentIndex--; tampilkanData(currentIndex); updateButtonState(); } };
+
+    function initGuestBook() { let btn = document.getElementById("btnBukuTamu"), viewer = document.getElementById("formViewer"), close = document.getElementById("btnCloseForm"); btn.onclick = () => viewer.classList.add("show"); close.onclick = () => viewer.classList.remove("show"); }
+    function initStats() { let btn = document.getElementById("btnStatistik"), viewer = document.getElementById("statsViewer"), close = document.getElementById("btnCloseStats"); btn.onclick = () => viewer.classList.add("show"); close.onclick = () => viewer.classList.remove("show"); }
+    function initCategoryFilter() { document.querySelectorAll(".cat-btn").forEach(btn => { btn.onclick = () => { let target = btn.getAttribute("data-cat").toLowerCase(), matches = []; for (let i = 1; i < dataRows.length; i++) { let cols = parseCSV(dataRows[i]); let cat = (cols[8] || "").toLowerCase(); if (cat.includes(target)) matches.push({ index: i, judul: cols[0], penulis: cols[1] }); } let rd = document.getElementById("searchResults"); if (matches.length) { currentPage = 1; renderTable(matches); } else { rd.style.display = "block"; rd.innerHTML = "<p>📌 Tidak ditemukan kategori.</p>"; } }; }); }
+
+    async function loadData() {
+        try {
+            let res = await fetch('buku.csv?t=' + Date.now()); if (!res.ok) throw new Error("buku.csv tidak ditemukan");
+            let txt = await res.text(); dataRows = txt.trim().split(/\r?\n/);
+            if (dataRows.length < 2) { document.getElementById("judul").innerText = "Data buku kosong"; return; }
+            currentIndex = 1; tampilkanData(currentIndex); updateButtonState();
+            document.getElementById("btnNext").onclick = () => { if (currentIndex < dataRows.length - 1) { currentIndex++; tampilkanData(currentIndex); updateButtonState(); } };
+            document.getElementById("btnPrev").onclick = () => { if (currentIndex > 1) { currentIndex--; tampilkanData(currentIndex); updateButtonState(); } };
             initReadButton(); initGuestBook(); initStats(); initCategoryFilter();
-            searchInput.oninput=(e)=>{ let kw=e.target.value.toLowerCase().trim(); let rd=document.getElementById("searchResults"); if(!kw){ rd.style.display="none"; tampilkanData(currentIndex); updateButtonState(); return; } let matches=[]; for(let i=1;i<dataRows.length;i++){ let cols=parseCSV(dataRows[i]); let judul=(cols[0]||"").toLowerCase(), penulis=(cols[1]||"").toLowerCase(); if(judul.includes(kw)||penulis.includes(kw)) matches.push({index:i, judul:cols[0], penulis:cols[1]}); } if(matches.length){ currentPage=1; renderTable(matches); } else{ rd.style.display="block"; rd.innerHTML="<p>🔍 Tidak ada buku yang cocok</p>"; } };
-        } catch(e){ console.error(e); document.getElementById("judul").innerText="Gagal memuat data"; }
+            searchInput.oninput = (e) => {
+                let kw = e.target.value.toLowerCase().trim(), rd = document.getElementById("searchResults");
+                if (!kw) { rd.style.display = "none"; tampilkanData(currentIndex); updateButtonState(); return; }
+                let matches = [];
+                for (let i = 1; i < dataRows.length; i++) {
+                    let cols = parseCSV(dataRows[i]); let judul = (cols[0] || "").toLowerCase(), penulis = (cols[1] || "").toLowerCase();
+                    if (judul.includes(kw) || penulis.includes(kw)) matches.push({ index: i, judul: cols[0], penulis: cols[1] });
+                }
+                if (matches.length) { currentPage = 1; renderTable(matches); } else { rd.style.display = "block"; rd.innerHTML = "<p>🔍 Tidak ada buku yang cocok</p>"; }
+            };
+        } catch (err) { console.error(err); document.getElementById("judul").innerText = "Gagal memuat data"; showToast("Gagal memuat data buku"); }
     }
-    initLogin().then(()=>loadData());
+
+    initLogin().then(() => loadData());
 </script>
 </body>
 </html>
