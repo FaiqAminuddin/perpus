@@ -44,9 +44,7 @@
             color: #2c3e50;
             cursor: pointer;
         }
-        .user-info:hover {
-            background: white;
-        }
+        .user-info:hover { background: white; }
         .search-box input {
             padding: 8px;
             width: 60%;
@@ -169,7 +167,6 @@
             .book-image img, #noCover { width: 100px; }
             .search-box input { width: 85%; }
         }
-        /* Modal overlay untuk login & profil */
         .overlay {
             position: fixed;
             top: 0; left: 0;
@@ -221,9 +218,7 @@
 
 <!-- MODAL LOGIN -->
 <div id="loginOverlay" class="overlay">
-    <div class="modal-card" id="loginModalCard">
-        <!-- konten dinamis diisi JS -->
-    </div>
+    <div class="modal-card" id="loginModalCard"></div>
 </div>
 
 <!-- MODAL PROFIL -->
@@ -305,20 +300,18 @@
     const ENTRY_AKTIVITAS = "entry.994210116";
     const ENTRY_JUDUL = "entry.498947527";
 
-    let currentUser = null;      // { username, nama, isAnggota, status (untuk tamu), ... }
+    let currentUser = null;
     let dataRows = [];
     let currentIndex = 1;
     let currentBookTitle = "";
     let currentFileUrl = "";
-    let anggotaData = [];         // array of { username, password, nama }
+    let anggotaData = []; // array of { username, password, nama }
 
-    // DOM elements
     const searchInput = document.getElementById("searchInput");
     let currentPage = 1;
     const rowsPerPage = 5;
     let currentMatches = [];
 
-    // Helper toast
     function showToast(msg) {
         const toast = document.getElementById("toastMsg");
         toast.innerText = msg;
@@ -326,7 +319,6 @@
         setTimeout(() => toast.style.opacity = "0", 2500);
     }
 
-    // Kirim log aktivitas ke Google Form
     function logActivity(activity, judulBuku) {
         if (!currentUser) return;
         let tampilanNama = currentUser.nama;
@@ -344,13 +336,7 @@
             mode: "no-cors",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: formData.toString()
-        }).then(() => {
-            console.log(`Tercatat: ${tampilanNama} - ${activity} - ${judulBuku}`);
-            showToast(`✅ ${activity} tercatat`);
-        }).catch(err => {
-            console.warn("Gagal kirim ke Google Form", err);
-            showToast(`⚠️ Gagal mencatat ${activity}`);
-        });
+        }).catch(err => console.warn("Gagal kirim ke Google Form", err));
     }
 
     // ==================== LOGIN & PROFIL ====================
@@ -385,7 +371,6 @@
         showToast("Anda telah logout");
     }
 
-    // Tampilkan menu awal pilih anggota/tamu
     function showLoginMenu() {
         const modalCard = document.getElementById("loginModalCard");
         modalCard.innerHTML = `
@@ -415,7 +400,7 @@
             const user = document.getElementById("loginUsername").value.trim();
             const pass = document.getElementById("loginPassword").value.trim();
             if (!user || !pass) { alert("Isi username dan password"); return; }
-            // cek di anggotaData
+            // Cari di anggotaData (sudah di-load)
             const found = anggotaData.find(a => a.username === user && a.password === pass);
             if (found) {
                 currentUser = {
@@ -477,16 +462,18 @@
         }
     }
 
-    // Load anggota.csv (format: username,password,nama)
+    // Load anggota.csv dengan pembersihan yang lebih baik
     async function loadAnggota() {
         try {
             const res = await fetch('anggota.csv');
             if (!res.ok) throw new Error("anggota.csv tidak ditemukan");
             const text = await res.text();
             const lines = text.trim().split(/\r?\n/);
-            // Lewati header jika ada (asumsikan baris pertama adalah header atau data)
             for (let i = 0; i < lines.length; i++) {
-                let parts = lines[i].split(',').map(s => s.replace(/^"|"$/g, '').trim());
+                let line = lines[i].trim();
+                if (line === "") continue;
+                // Split dengan koma, tapi jangan pecah yang di dalam kutip jika ada (sederhana)
+                let parts = line.split(',').map(s => s.replace(/^"|"$/g, '').trim());
                 if (parts.length >= 3) {
                     anggotaData.push({
                         username: parts[0],
@@ -495,19 +482,18 @@
                     });
                 }
             }
+            console.log("Anggota loaded:", anggotaData); // untuk debugging
         } catch(e) {
             console.warn("Gagal baca anggota.csv, login anggota tidak tersedia", e);
         }
     }
 
-    // Inisialisasi login: cek localStorage
     async function initLogin() {
         await loadAnggota();
         const stored = localStorage.getItem("perpustakaan_user");
         if (stored) {
             try {
                 currentUser = JSON.parse(stored);
-                // validasi sederhana
                 if (currentUser.isAnggota && !currentUser.username) throw new Error();
                 updateUserDisplay();
                 hideLogin();
@@ -529,7 +515,6 @@
             hideProfil();
         };
         document.getElementById("btnTutupProfil").onclick = () => hideProfil();
-        // Tutup overlay jika klik di luar (optional)
         profilOverlay.addEventListener("click", (e) => {
             if (e.target === profilOverlay) hideProfil();
         });
@@ -538,7 +523,7 @@
         });
     }
 
-    // ==================== FUNGSI PERPUSTAKAAN (tidak berubah banyak) ====================
+    // ==================== FUNGSI PERPUSTAKAAN ====================
     function getEmbedUrl(originalUrl) {
         if (!originalUrl || originalUrl === "#") return null;
         let url = originalUrl.trim();
@@ -787,7 +772,6 @@
         } catch(err) { console.error(err); document.getElementById("judul").innerText = "Gagal memuat data"; }
     }
 
-    // Jalankan semuanya
     initLogin().then(() => loadData());
 </script>
 </body>
